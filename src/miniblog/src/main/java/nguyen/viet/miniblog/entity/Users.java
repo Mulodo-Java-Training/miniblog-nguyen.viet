@@ -115,4 +115,9 @@ public class Users {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	
+	@Override
+	public String toString() {
+		return getId()+", "+getLastname()+", " + getFirstname();
+	}
 }

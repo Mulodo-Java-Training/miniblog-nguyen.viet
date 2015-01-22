@@ -12,7 +12,16 @@ public class UserServiceImpl<T extends Users> extends CommonServiceImpl<Users> i
 	
 	@Autowired
     private UserDAO<Users> userDAO;
-	public void setUserDAO(UserDAO<Users> employeeDAO) {
-		this.userDAO = employeeDAO;
+	public void setUserDAO(UserDAO<Users> user) {
+		this.userDAO = user;
 	}
+	@Override
+	public Users getUsersByUsername(String name) {
+		return this.userDAO.getUsersByUsername(name);
+	}
+	@Override
+	public Users getUserByIdPassword(String username, String password) {
+		return this.userDAO.getUserByIdPassword(username, password);
+	}
+	
 }
