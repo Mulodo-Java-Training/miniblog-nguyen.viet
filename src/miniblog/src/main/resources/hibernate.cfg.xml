@@ -6,7 +6,7 @@
 <hibernate-configuration>
 	<session-factory>
 		<property name="hibernate.current_session_context_class">thread</property>
-		<mapping class="nguyen.viet.miniblog.entity.Users" />
+		<mapping class="miniblog.entity.Users" />
 
 	</session-factory>
 </hibernate-configuration>

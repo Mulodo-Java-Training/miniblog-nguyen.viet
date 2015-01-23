@@ -1,4 +1,4 @@
-package nguyen.viet.miniblog.entity;
+package miniblog.entity;
 
 import java.util.Date;
 
@@ -14,7 +14,6 @@ public class Users {
      
     @Id
     @Column(name="id")
-    @GeneratedValue
     private int id;
     
     @Column(name="username")
@@ -118,6 +117,13 @@ public class Users {
 	
 	@Override
 	public String toString() {
-		return getId()+", "+getLastname()+", " + getFirstname();
+		return "id: "+getId()
+		        +"--Username: "+getUsername()
+		        +"--Password: " +getPassword()
+		        +"--Lastname: "+getLastname()
+		        +"--Firstname: " + getFirstname()
+		        +"--Status: " +getStatus()
+		        +"--Birthday: " +getBirthday()
+		        +"--Email: " +getEmail();
 	}
 }

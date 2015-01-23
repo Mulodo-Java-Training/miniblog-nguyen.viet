@@ -1,9 +1,11 @@
-package nguyen.viet.miniblog.DAOImlp;
+package miniblog.daoimplement;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import nguyen.viet.miniblog.DAOInterface.ICommonDao;
+
+import miniblog.daointerface.ICommonDao;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -12,26 +14,32 @@ import org.springframework.stereotype.Repository;
 @Repository
 public abstract class CommonDaoImpl<T> extends HibernateDaoSupport implements
 		ICommonDao<T> {
+    //create entity class
 	private Class<T> entityClass;
+	//create session 
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	//set session
 	@Autowired
 	public void setSession(SessionFactory sessionFactory) {
 		this.setSessionFactory(sessionFactory);
 	}
 
+	//create contructor and set value for entity
 	@SuppressWarnings("unchecked")
 	public CommonDaoImpl() {
 		entityClass = (Class<T>) ((ParameterizedType) getClass()
 				.getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 	
+	// Use HibernateDaoSupport to get list data
 	@Override
 	public List<T> list() {
 		return getHibernateTemplate().loadAll(entityClass);
 	}
 
+	// Use HibernateDaoSupport to add a date
 	@Override
 	public boolean save(T bean) {
 		Boolean flag = false;
@@ -44,7 +52,7 @@ public abstract class CommonDaoImpl<T> extends HibernateDaoSupport implements
 		}
 		return flag;
 	}
-
+	// Use HibernateDaoSupport to update a data
 	@Override
 	public boolean update(T bean) {
 		Boolean flag = false;
@@ -58,6 +66,7 @@ public abstract class CommonDaoImpl<T> extends HibernateDaoSupport implements
 		return flag;
 	}
 
+	// Use HibernateDaoSupport to delete a data
 	@Override
 	public boolean delete(Serializable id) {
 		Boolean flag = false;
@@ -71,6 +80,7 @@ public abstract class CommonDaoImpl<T> extends HibernateDaoSupport implements
 		return flag;
 	}
 
+	// Use HibernateDaoSupport to get a data by id
 	@Override
 	public T get(Serializable id) {
 		T o = (T) getHibernateTemplate().get(entityClass, id);
