@@ -24,6 +24,7 @@ public class PostController extends HttpServlet {
 
     // Create Article Service
     @Autowired
+    @Qualifier("iArticleService")
     private IArticleService articleService;
 
     public PostController() {

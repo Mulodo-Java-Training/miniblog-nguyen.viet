@@ -1,16 +1,13 @@
 package miniblog.daoimplement;
 
-import javax.annotation.Resource;
-
 import miniblog.daointerface.IArticleDao;
 import miniblog.entity.Articles;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
+//@Repository("iArticleDao")
 public class ArticleDaoImpl<T extends Articles> extends CommonDaoImpl<Articles> implements IArticleDao<T> {
     // Create a session
     @Autowired

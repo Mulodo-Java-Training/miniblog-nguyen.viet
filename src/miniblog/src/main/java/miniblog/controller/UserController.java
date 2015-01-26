@@ -22,11 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 
+import com.google.gson.Gson;
+
 @Path("users")
 @Controller
 public class UserController {
     // Create User Service
     @Autowired
+    @Qualifier("iUserService")
     private IUserService userService;
 
     // Create Common controller
@@ -44,6 +47,7 @@ public class UserController {
     @Path("/add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addUser(Users user)
     {
         // Check fileds required
@@ -68,17 +72,23 @@ public class UserController {
         }
         // check create success or not
         if (flat == true & user != null)
+        {
+            // Create Gson to parse object to json
+            Gson gson = new Gson();
             // return successful result !
-            return Response.status(200).entity("Account created success!-----" + user.toString()).build();
-        else
+            return Response.status(200).entity(gson.toJson(user)).build();
+        } else
+        {
             // return faild result!
             return Response.status(9002).entity("User exist!").build();
+        }
     }
 
     // Login
     @Path("/login")
     @POST
-    @Produces(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response login(@FormParam("username") String username, @FormParam("password") String password)
     {
         // Check client login with username and password
@@ -89,14 +99,16 @@ public class UserController {
         // Convert password to MD5 to compile with database
         String newpass = commonController.MD5(password);
         // Get User from database
-        Users u = userService.getUserByIdPassword(username, newpass);
+        Users user = userService.getUserByIdPassword(username, newpass);
         // check get success or not
-        if (u != null)
+        if (user != null)
         {
             // set data user login
-            setLogin(u.getId());
+            setLogin(user.getId());
+            // Create Gson to parse object to json
+            Gson gson = new Gson();
             // return if login success!
-            return Response.status(200).entity("Login Susscess---! Get data:--" + u.toString()).build();
+            return Response.status(200).entity(gson.toJson(user)).build();
         } else
         {
             // return message if login faild
@@ -129,6 +141,8 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserInfor(@PathParam("id") String id)
     {
+        if(id.isEmpty() || id == null || id.matches("\\s+"))
+            return Response.status(1001).entity("Field is required!").build(); 
         int userId = Integer.valueOf(id);
         // check user login or not
         if (checkLogin() == userId)
@@ -139,8 +153,10 @@ public class UserController {
             {
                 user = new Users();
             }
+            // Create Gson to parse object to json
+            Gson gson = new Gson();
             // return with user infor
-            return Response.status(200).entity("User infor: " + user.toString()).build();
+            return Response.status(200).entity(gson.toJson(user)).build();
         } else
         {
             // return if not login
@@ -169,8 +185,10 @@ public class UserController {
         {
             // user update
             userService.update(user);
-            // return status and message success
-            return Response.status(200).entity("Successful!---" + user.toString()).build();
+            // Create Gson to parse object to json
+            Gson gson = new Gson();
+            // return status and user infor success
+            return Response.status(200).entity(gson.toJson(user)).build();
         } else
         {
             setLogin(0);
@@ -197,8 +215,10 @@ public class UserController {
         {
             // user update password
             userService.update(user);
+            // Create Gson to parse object to json
+            Gson gson = new Gson();
             // return status and message success
-            return Response.status(200).entity("Change Password Successful!---" + user.toString()).build();
+            return Response.status(200).entity(gson.toJson(user)).build();
         } else
         {
             setLogin(0);
@@ -210,7 +230,8 @@ public class UserController {
     // Search user by name
     @Path("/search")
     @POST
-    @Produces(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response searchByName(@FormParam("name") String name)
     {
         // get user have the same name with client input
@@ -221,8 +242,10 @@ public class UserController {
             // check have or not user in database match name searching
             if (users != null)
             {
+              //Create Gson to parse object to json
+                Gson gson = new Gson();
                 // return if exist
-                return Response.status(200).entity(users.toString()).build();
+                return Response.status(200).entity(gson.toJson(users)).build();
             } else
             {
                 // return if not

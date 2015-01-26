@@ -10,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("iUserService")
 public class UserServiceImpl<T extends Users> extends CommonServiceImpl<Users> implements IUserService {
 
     //Create userDAO to operation with database
     @Autowired
+    @Qualifier("iUserDao")
     private IUserDao<Users> userDAO;
 
     public void setUserDAO(IUserDao<Users> user)

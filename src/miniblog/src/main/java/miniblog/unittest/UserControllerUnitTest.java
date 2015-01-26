@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import javax.ws.rs.core.MediaType;
 
+import miniblog.constant.URLConstant;
 import miniblog.controller.UserController;
 import miniblog.entity.Users;
 
@@ -53,7 +54,7 @@ public class UserControllerUnitTest {
         assertEquals(userController.addUser(u).getStatus(), 1001);
 
         //Delete user before, because after run this menthod test will have a user created//
-        ClientRequest requestDelete = new ClientRequest("http://localhost:8080/miniblog/users/delete");
+        ClientRequest requestDelete = new ClientRequest(URLConstant.DELETE_USER);
         // accept with input type
         requestDelete.accept(MediaType.APPLICATION_FORM_URLENCODED);
         // input data
@@ -67,14 +68,14 @@ public class UserControllerUnitTest {
         
         // ///////////////////Add new user/////////////////////////
         // create a request add user from client
-        ClientRequest requestAddUser = new ClientRequest("http://localhost:8080/miniblog/users/add");
+        ClientRequest requestAddUser = new ClientRequest(URLConstant.CREATE_USER);
         // accept with input type
-        requestAddUser.accept("application/json");
+        requestAddUser.accept(MediaType.APPLICATION_JSON);
         // input data
         String userInput = "{\"username\": \"testAdd\"," + "\"password\": \"123456\","
                 + "\"lastname\": \"one\",\"firstname\": \"test\"," + "\"email\":\"testadd@yahoo.com\"}";
         // get data
-        requestAddUser.body("application/json", userInput);
+        requestAddUser.body(MediaType.APPLICATION_JSON, userInput);
         // run operation and get respond
         ClientResponse<Users> response = requestAddUser.post(Users.class);
         // check add new user with code 200 is successful!
@@ -100,9 +101,9 @@ public class UserControllerUnitTest {
     public void testLogin() throws Exception
     {
         // create a request from client
-        ClientRequest request = new ClientRequest("http://localhost:8080/miniblog/users/login");
+        ClientRequest request = new ClientRequest(URLConstant.LOGIN_USER);
         // accept with input type
-        request.accept(MediaType.APPLICATION_FORM_URLENCODED);
+        request.accept(MediaType.APPLICATION_JSON);
         // input data
         String input = "username=nguyen.viet&password=123456";
         // push data
@@ -158,7 +159,7 @@ public class UserControllerUnitTest {
         // set 1 for user have been login in to system
         userController.setLogin(1);
         // create a request from client
-        ClientRequest request = new ClientRequest("http://localhost:8080/miniblog/users/infor/1");
+        ClientRequest request = new ClientRequest(URLConstant.INFOR_USER+"1");
         // get respone to check
         ClientResponse<String> response = request.get(String.class);
         // /////////// get user infor ////////////////
@@ -180,7 +181,7 @@ public class UserControllerUnitTest {
         // set 1 for user have been login in to system
         userController.setLogin(1);
         // create a request from client
-        ClientRequest request = new ClientRequest("http://localhost:8080/miniblog/users/update");
+        ClientRequest request = new ClientRequest(URLConstant.UPDATE_USER);
         // accept with input type
         request.accept("application/json");
         // input data
@@ -208,7 +209,7 @@ public class UserControllerUnitTest {
         // set 1 for user have been login in to system
         userController.setLogin(1);
         // create a request from client
-        ClientRequest request = new ClientRequest("http://localhost:8080/miniblog/users/changePass");
+        ClientRequest request = new ClientRequest(URLConstant.CHANGEPASS_USER);
         // accept with input type
         request.accept("application/json");
         // input data
@@ -235,9 +236,9 @@ public class UserControllerUnitTest {
         // set 1 for user have been login in to system
         userController.setLogin(1);
         // create a request from client
-        ClientRequest request = new ClientRequest("http://localhost:8080/miniblog/users/search");
+        ClientRequest request = new ClientRequest(URLConstant.SEARCH_USER);
         // accept with input type
-        request.accept(MediaType.APPLICATION_FORM_URLENCODED);
+        request.accept(MediaType.APPLICATION_JSON);
         // input data
         String input = "name=viet";
         // push data

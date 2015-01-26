@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import miniblog.constant.URLConstant;
 import miniblog.controller.PostController;
 import miniblog.entity.Articles;
 
@@ -56,7 +57,7 @@ public class PostControllerUnitTest {
 
         // /////////////////Check create a post success/////////////////
         // create a request add post from user
-        ClientRequest requestAddPost = new ClientRequest("http://localhost:8080/miniblog/posts/add");
+        ClientRequest requestAddPost = new ClientRequest(URLConstant.ADD_POST);
         // accept with input type
         requestAddPost.accept("application/json");
         // input post infor

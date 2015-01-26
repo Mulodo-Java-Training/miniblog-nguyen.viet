@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
-@Repository
+//@Repository("iCommonDao")
 public abstract class CommonDaoImpl<T> extends HibernateDaoSupport implements
 		ICommonDao<T> {
     //create entity class
