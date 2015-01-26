@@ -7,10 +7,8 @@ import static org.junit.Assert.assertEquals;
 
 import javax.ws.rs.core.MediaType;
 
-import miniblog.controller.CommonController;
 import miniblog.controller.UserController;
 import miniblog.entity.Users;
-import miniblog.serviceinterface.IUserService;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
@@ -55,7 +53,7 @@ public class UserControllerUnitTest {
         assertEquals(userController.addUser(u).getStatus(), 1001);
 
         //Delete user before, because after run this menthod test will have a user created//
-        ClientRequest requestDelete = new ClientRequest("http://localhost:8080/miniblog/deleteUser");
+        ClientRequest requestDelete = new ClientRequest("http://localhost:8080/miniblog/users/delete");
         // accept with input type
         requestDelete.accept(MediaType.APPLICATION_FORM_URLENCODED);
         // input data

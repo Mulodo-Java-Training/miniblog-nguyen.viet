@@ -1,16 +1,17 @@
 package miniblog.daoimplement;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 import miniblog.daointerface.IArticleDao;
 import miniblog.entity.Articles;
-import miniblog.entity.Users;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
 public class ArticleDaoImpl<T extends Articles> extends CommonDaoImpl<Articles> implements IArticleDao<T> {
-
     // Create a session
     @Autowired
     private SessionFactory sessionFactory;
@@ -22,7 +23,7 @@ public class ArticleDaoImpl<T extends Articles> extends CommonDaoImpl<Articles> 
         // begin transaction
         s.beginTransaction();
         
-        String hqlUpdate = "update Article set status = :newstatus where id = :id";
+        String hqlUpdate = "update Articles set status = :newstatus where id = :id";
         s.createQuery(hqlUpdate)
         .setInteger("newstatus", article.getStatus())
         .setInteger("id", article.getId()).executeUpdate();

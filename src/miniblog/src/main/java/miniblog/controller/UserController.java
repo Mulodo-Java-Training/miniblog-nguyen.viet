@@ -16,27 +16,27 @@ import javax.ws.rs.core.Response;
 
 import miniblog.entity.Users;
 import miniblog.serviceinterface.IUserService;
+import miniblog.util.Commons;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 
 @Path("users")
 @Controller
 public class UserController {
-    private static final long serialVersionUID = 1L;
-
     // Create User Service
     @Autowired
     private IUserService userService;
 
     // Create Common controller
-    private CommonController commonController;
+    private Commons commonController;
 
     // Create field to manager status login and logout
     private int loginStatus;
 
     public UserController() {
-        this.commonController = new CommonController();
+        this.commonController = new Commons();
         this.loginStatus = 0;
     }
 
@@ -246,4 +246,14 @@ public class UserController {
         loginStatus = loginstt;
     }
 
+    // Delete User
+    @Path("/delete")
+    @POST
+    @Produces(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response deleteUser(@FormParam("username") String username)
+    {
+        // Get user id by username and delete this user
+        userService.delete(userService.getUsersByUsername(username).getId());
+        return Response.status(200).entity("Delete Susscess").build();
+    }
 }

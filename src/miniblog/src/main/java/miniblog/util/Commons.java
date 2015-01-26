@@ -1,39 +1,10 @@
-package miniblog.controller;
+package miniblog.util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import miniblog.serviceinterface.IUserService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-
-@Path("/")
-@Controller
-public class CommonController {
-
-    @Autowired
-    private IUserService userService;
-
-    // Delete User
-    @Path("deleteUser")
-    @POST
-    @Produces(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response deleteUser(@FormParam("username") String username)
-    {
-        //Get user id by username and delete this user
-        userService.delete(userService.getUsersByUsername(username).getId());
-        return Response.status(200).entity("Delete Susscess").build();
-    }
-
+public class Commons {
     // //// Two methods convet password to MD5////////
     private static String convertToHex(byte[] data)
     {

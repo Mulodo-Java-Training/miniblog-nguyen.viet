@@ -1,5 +1,6 @@
 package miniblog.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServlet;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -13,6 +14,7 @@ import miniblog.entity.Articles;
 import miniblog.serviceinterface.IArticleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 
 @Path("posts")
@@ -36,7 +38,7 @@ public class PostController extends HttpServlet {
         // Check fileds required
         if (articles.getUsers_id() == null)
             return Response.status(1002).entity("Please login first!").build();
-        if (articles.getTitle() == null || articles.getDate_create() == null)
+        if (articles.getTitle() == null)
             return Response.status(1001).entity("Fields are required!").build();
         // create a post
         boolean flat = false;
@@ -54,11 +56,13 @@ public class PostController extends HttpServlet {
 
     }
     
-    @Path("/status")
-    @PUT
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response setActive(Articles acticle){
-        return null;
-    }
+//    @Path("/status")
+//    @PUT
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response setActive(Articles acticle){
+//        Articles post = acticle;
+//        articleService.setActive(post);
+//        return Response.status(200).entity("Post successful!-----" + post.getStatus()).build();
+//    }
 }

@@ -7,6 +7,7 @@ import miniblog.entity.Users;
 import miniblog.serviceinterface.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
