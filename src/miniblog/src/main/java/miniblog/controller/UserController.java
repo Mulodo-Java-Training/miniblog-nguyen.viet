@@ -1,14 +1,9 @@
 package miniblog.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,7 +11,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -25,17 +19,26 @@ import miniblog.serviceinterface.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Path("users")
 @Controller
-public class UserController extends HttpServlet {
+public class UserController {
     private static final long serialVersionUID = 1L;
 
+    // Create User Service
     @Autowired
     private IUserService userService;
 
-    private int loginStatus = 0;
+    // Create Common controller
+    private CommonController commonController;
+
+    // Create field to manager status login and logout
+    private int loginStatus;
+
+    public UserController() {
+        this.commonController = new CommonController();
+        this.loginStatus = 0;
+    }
 
     // Register
     @Path("/add")
@@ -52,7 +55,7 @@ public class UserController extends HttpServlet {
         // get password client input
         String newpass = user.getPassword();
         // convert password to MD5 before input to database
-        user.setPassword(MD5(newpass));
+        user.setPassword(commonController.MD5(newpass));
         // check add new user to database success or not(exits or not)
         try
         {
@@ -79,12 +82,12 @@ public class UserController extends HttpServlet {
     public Response login(@FormParam("username") String username, @FormParam("password") String password)
     {
         // Check client login with username and password
-        if (username == null || password == null)
+        if (username == null || username.isEmpty() || password == null || password.isEmpty())
         {
             return Response.status(1001).entity("Fields are required!").build();
         }
         // Convert password to MD5 to compile with database
-        String newpass = MD5(password);
+        String newpass = commonController.MD5(password);
         // Get User from database
         Users u = userService.getUserByIdPassword(username, newpass);
         // check get success or not
@@ -188,7 +191,7 @@ public class UserController extends HttpServlet {
         // get information of user from database with user id of client login
         user = userService.getById(u.getId());
         // change password client want
-        user.setPassword(MD5(u.getPassword()));
+        user.setPassword(commonController.MD5(u.getPassword()));
         // check user login or not and permission to update
         if (checkLogin() == u.getId())
         {
@@ -212,21 +215,21 @@ public class UserController extends HttpServlet {
     {
         // get user have the same name with client input
         List<Users> users = userService.getUsersByName(name);
-        //check user login or not
+        // check user login or not
         if (checkLogin() > 0)
         {
-            //check have or not user in database match name searching
+            // check have or not user in database match name searching
             if (users != null)
             {
-                //return if exist
+                // return if exist
                 return Response.status(200).entity(users.toString()).build();
             } else
             {
-                //return if not
+                // return if not
                 return Response.status(9001).entity("User not exit").build();
             }
         } else
-            //return if not login
+            // return if not login
             return Response.status(200).entity("Need to login first").build();
 
     }
@@ -241,58 +244,6 @@ public class UserController extends HttpServlet {
     public void setLogin(int loginstt)
     {
         loginStatus = loginstt;
-    }
-
-    @Path("/delete")
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteUser(String name)
-    {
-        name = "nguyen.a";
-        userService.delete(userService.getUsersByUsername(name).getId());
-        return Response.status(200).entity("Delete Susscess").build();
-    }
-
-    // //// Two methods convet password to MD5////////
-    private static String convertToHex(byte[] data)
-    {
-        StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < data.length; i++)
-        {
-            int halfbyte = (data[i] >>> 4) & 0x0F;
-            int two_halfs = 0;
-            do
-            {
-                if ((0 <= halfbyte) && (halfbyte <= 9))
-                    buf.append((char) ('0' + halfbyte));
-                else
-                    buf.append((char) ('a' + (halfbyte - 10)));
-                halfbyte = data[i] & 0x0F;
-            } while (two_halfs++ < 1);
-        }
-        return buf.toString();
-    }
-
-    public static String MD5(String text)
-    {
-        MessageDigest md = null;
-        try
-        {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e)
-        {
-            e.printStackTrace();
-        }
-        byte[] md5hash = new byte[32];
-        try
-        {
-            md.update(text.getBytes("iso-8859-1"), 0, text.length());
-        } catch (UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
-        }
-        md5hash = md.digest();
-        return convertToHex(md5hash);
     }
 
 }

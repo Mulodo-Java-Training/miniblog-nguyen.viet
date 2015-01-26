@@ -7,14 +7,17 @@ import static org.junit.Assert.assertEquals;
 
 import javax.ws.rs.core.MediaType;
 
+import miniblog.controller.CommonController;
 import miniblog.controller.UserController;
 import miniblog.entity.Users;
+import miniblog.serviceinterface.IUserService;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author NguyenLeQuoc
@@ -22,8 +25,10 @@ import org.junit.Test;
  */
 public class UserControllerUnitTest {
     // Create object Usercontroller to test
+    @Autowired
     private UserController userController;
-
+    
+    // Create object CommonController to support test
     @Before
     public void setUp() throws Exception
     {
@@ -49,30 +54,27 @@ public class UserControllerUnitTest {
         Users u = new Users();
         assertEquals(userController.addUser(u).getStatus(), 1001);
 
-        // //// Delete user before, because after run this menthod test will
-        // have a///////
-        // user created//
-        // create a request delete from client
-        ClientRequest requestDelete = new ClientRequest("http://localhost:8080/miniblog/users/delete");
+        //Delete user before, because after run this menthod test will have a user created//
+        ClientRequest requestDelete = new ClientRequest("http://localhost:8080/miniblog/deleteUser");
         // accept with input type
-        requestDelete.accept("application/json");
+        requestDelete.accept(MediaType.APPLICATION_FORM_URLENCODED);
         // input data
-        String usernameInput = "{\"username\": \"nguyen.a\"}";
+        String usernameInput = "username=testAdd";
         // get data
-        requestDelete.body("application/json", usernameInput);
+        requestDelete.body(MediaType.APPLICATION_FORM_URLENCODED, usernameInput);
         // run operation and get respond
-        ClientResponse<String> response2 = requestDelete.delete(String.class);
+        ClientResponse<String> response2 = requestDelete.post(String.class);
         // close environment
         response2.close();
-
+        
         // ///////////////////Add new user/////////////////////////
         // create a request add user from client
         ClientRequest requestAddUser = new ClientRequest("http://localhost:8080/miniblog/users/add");
         // accept with input type
         requestAddUser.accept("application/json");
         // input data
-        String userInput = "{\"username\": \"nguyen.a\"," + "\"password\": \"123456\","
-                + "\"lastname\": \"nguyen\",\"firstname\": \"test\"," + "\"email\":\"viet@yahoo.com\"}";
+        String userInput = "{\"username\": \"testAdd\"," + "\"password\": \"123456\","
+                + "\"lastname\": \"one\",\"firstname\": \"test\"," + "\"email\":\"testadd@yahoo.com\"}";
         // get data
         requestAddUser.body("application/json", userInput);
         // run operation and get respond
@@ -132,7 +134,6 @@ public class UserControllerUnitTest {
     /**
      * Test method user logout
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testLogout()
     {
@@ -185,7 +186,7 @@ public class UserControllerUnitTest {
         // accept with input type
         request.accept("application/json");
         // input data
-        String userInput = "{\"id\": \"1\", " + "\"lastname\": \"test\", " + "\"firstname\": \"test\", "
+        String userInput = "{\"id\": \"1\", " + "\"lastname\": \"nguyen\", " + "\"firstname\": \"viet\", "
                 + "\"birthday\": \"2014-5-11\", " + "\"email\":\"viet@yahoo.com\"}";
         // get data
         request.body("application/json", userInput);
