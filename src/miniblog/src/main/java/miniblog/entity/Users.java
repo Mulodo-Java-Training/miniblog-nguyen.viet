@@ -1,41 +1,66 @@
 package miniblog.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import miniblog.util.DateAdapter;
+
 
 @Entity
 @Table(name="Users")
-public class Users {
-     
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlRootElement(name = "data")
+public class Users implements Serializable{
+    private static final long serialVersionUID = 2L;
+    
     @Id
     @Column(name="id")
+    @XmlAttribute(name = "id")
     private int id;
     
     @Column(name="username")
+    @XmlElement(name = "username")
 	private String username;
     
     @Column(name="password")
+    @XmlElement(name = "password")
 	private String password;
     
     @Column(name="firstname")
+    @XmlElement(name = "firstname")
 	private String firstname;
     
     @Column(name="lastname")
+    @XmlElement(name = "lastname")
 	private String lastname;
     
     @Column(name="birthday")
+    @XmlElement(name = "birthday")
+    @XmlJavaTypeAdapter(DateAdapter.class)
 	private Date birthday;
     
     @Column(name="email")
+    @XmlElement(name = "email")
 	private String email;
     
     @Column(name="status")
+    @XmlElement(name = "status")
 	private int status;
 
+    
     public Users() {
 	}
     
@@ -112,17 +137,5 @@ public class Users {
 
 	public void setStatus(int status) {
 		this.status = status;
-	}
-	
-	@Override
-	public String toString() {
-		return "id: "+getId()
-		        +"--Username: "+getUsername()
-		        +"--Password: " +getPassword()
-		        +"--Lastname: "+getLastname()
-		        +"--Firstname: " + getFirstname()
-		        +"--Status: " +getStatus()
-		        +"--Birthday: " +getBirthday()
-		        +"--Email: " +getEmail();
 	}
 }

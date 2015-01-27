@@ -2,7 +2,6 @@ package miniblog.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServlet;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -17,6 +16,8 @@ import javax.ws.rs.core.Response;
 import miniblog.entity.Users;
 import miniblog.serviceinterface.IUserService;
 import miniblog.util.Commons;
+import miniblog.util.ResultResponse;
+import miniblog.util.StatusResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,7 +54,13 @@ public class UserController {
         // Check fileds required
         if (user.getFirstname() == null || user.getLastname() == null || user.getEmail() == null
                 || user.getUsername() == null || user.getPassword() == null)
-            return Response.status(1001).entity("Fields are required!").build();
+        {
+            // set status return
+            StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1001).entity(result).build();
+        }
         // create user project
         Boolean flat = false;
         // get password client input
@@ -73,14 +80,21 @@ public class UserController {
         // check create success or not
         if (flat == true & user != null)
         {
-            // Create Gson to parse object to json
-            Gson gson = new Gson();
+            // set status return
+            StatusResponse status = new StatusResponse(200, "User account was created successfully!",
+                    "Account created!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, user);
             // return successful result !
-            return Response.status(200).entity(gson.toJson(user)).build();
+            return Response.status(200).entity(result).build();
         } else
         {
             // return faild result!
-            return Response.status(9002).entity("User exist!").build();
+            // set status return
+            StatusResponse status = new StatusResponse(9002, "User account was created faild!", "Account exist!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(9002).entity(result).build();
         }
     }
 
@@ -94,7 +108,11 @@ public class UserController {
         // Check client login with username and password
         if (username == null || username.isEmpty() || password == null || password.isEmpty())
         {
-            return Response.status(1001).entity("Fields are required!").build();
+            // set status return
+            StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1001).entity(result).build();
         }
         // Convert password to MD5 to compile with database
         String newpass = commonController.MD5(password);
@@ -105,14 +123,19 @@ public class UserController {
         {
             // set data user login
             setLogin(user.getId());
-            // Create Gson to parse object to json
-            Gson gson = new Gson();
             // return if login success!
-            return Response.status(200).entity(gson.toJson(user)).build();
+            // set status return
+            StatusResponse status = new StatusResponse(200, "User account was login successfully", "Login success!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, user);
+            return Response.status(200).entity(result).build();
         } else
         {
             // return message if login faild
-            return Response.status(9001).entity("Login faild!").build();
+            StatusResponse status = new StatusResponse(9001, "Data not exist", "Login Faild!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(9001).entity(result).build();
         }
     }
 
@@ -127,11 +150,19 @@ public class UserController {
             // reset login status
             loginStatus = 0;
             // return with login successful
-            return Response.status(200).entity("Logout successful!").build();
+            // set status
+            StatusResponse status = new StatusResponse(200, "User logout successfully", "Logout success!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(200).entity(result).build();
         } else
         {
             // return when login faild because not login first
-            return Response.status(1002).entity("Login not yet!").build();
+            // set status
+            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1002).entity(result).build();
         }
     }
 
@@ -141,8 +172,14 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserInfor(@PathParam("id") String id)
     {
-        if(id.isEmpty() || id == null || id.matches("\\s+"))
-            return Response.status(1001).entity("Field is required!").build(); 
+        if (id.isEmpty() || id == null || id.matches("\\s+"))
+        {
+            // set status return
+            StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1001).entity(result).build();
+        }
         int userId = Integer.valueOf(id);
         // check user login or not
         if (checkLogin() == userId)
@@ -153,14 +190,20 @@ public class UserController {
             {
                 user = new Users();
             }
-            // Create Gson to parse object to json
-            Gson gson = new Gson();
-            // return with user infor
-            return Response.status(200).entity(gson.toJson(user)).build();
+            // set status return
+            StatusResponse status = new StatusResponse(200, "Get user information successfully.", "Get data success!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, user);
+            // return result
+            return Response.status(200).entity(result).build();
         } else
         {
-            // return if not login
-            return Response.status(1002).entity("You are not login. ").build();
+            // return when login faild because not login first
+            // set status
+            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1002).entity(result).build();
         }
     }
 
@@ -171,6 +214,14 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(Users u)
     {
+        if (u.getFirstname() == null || u.getLastname() == null || u.getBirthday() == null || u.getEmail() == null)
+        {
+            // set status return
+            StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1001).entity(result).build();
+        }
         // create a user
         Users user = new Users();
         // get information of user from database with user id of client login
@@ -185,15 +236,21 @@ public class UserController {
         {
             // user update
             userService.update(user);
-            // Create Gson to parse object to json
-            Gson gson = new Gson();
             // return status and user infor success
-            return Response.status(200).entity(gson.toJson(user)).build();
+            // set status return
+            StatusResponse status = new StatusResponse(200, "User updated successfully.", "updated successful!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, user);
+            return Response.status(200).entity(result).build();
         } else
         {
             setLogin(0);
             // return if not login
-            return Response.status(1002).entity("You are not login. ").build();
+            // set status
+            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1002).entity(result).build();
         }
     }
 
@@ -204,6 +261,14 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response changePass(Users u)
     {
+        if (u.getPassword() == null)
+        {
+            // set status return
+            StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1001).entity(result).build();
+        }
         // create a user
         Users user = new Users();
         // get information of user from database with user id of client login
@@ -216,14 +281,20 @@ public class UserController {
             // user update password
             userService.update(user);
             // Create Gson to parse object to json
-            Gson gson = new Gson();
-            // return status and message success
-            return Response.status(200).entity(gson.toJson(user)).build();
+            // set status return
+            StatusResponse status = new StatusResponse(200, "Changed password successfully.", "Changed success!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, user);
+            return Response.status(200).entity(result).build();
         } else
         {
             setLogin(0);
             // return if not login
-            return Response.status(1002).entity("You are not login. ").build();
+            // set status
+            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1002).entity(result).build();
         }
     }
 
@@ -242,18 +313,32 @@ public class UserController {
             // check have or not user in database match name searching
             if (users != null)
             {
-              //Create Gson to parse object to json
+                // Create Gson to parse object to json
                 Gson gson = new Gson();
                 // return if exist
-                return Response.status(200).entity(gson.toJson(users)).build();
+                StatusResponse status = new StatusResponse(200, "Search user information successfully.",
+                        "Get data success!");
+                // set result return
+                ResultResponse result = new ResultResponse(status, users);
+                return Response.status(200).entity(result).build();
             } else
             {
                 // return if not
-                return Response.status(9001).entity("User not exit").build();
+                // set status
+                StatusResponse status = new StatusResponse(9001, "Data not exist", "Search Faild!");
+                // set result return
+                ResultResponse result = new ResultResponse(status, null);
+                return Response.status(9001).entity(result).build();
             }
         } else
+        {
             // return if not login
-            return Response.status(200).entity("Need to login first").build();
+            // set status
+            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1002).entity(result).build();
+        }
 
     }
 

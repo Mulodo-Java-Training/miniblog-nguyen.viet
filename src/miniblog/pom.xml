@@ -54,7 +54,6 @@
 			<artifactId>resteasy-multipart-provider</artifactId>
 			<version>3.0.6.Final</version>
 		</dependency>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
