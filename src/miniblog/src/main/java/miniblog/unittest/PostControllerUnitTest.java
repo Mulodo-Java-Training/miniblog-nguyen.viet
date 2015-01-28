@@ -100,4 +100,40 @@ public class PostControllerUnitTest {
         responseSuccess.close();
     }
     
+    /**
+     * Test method add edit post
+     * 
+     * @throws Exception
+     */
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testEditPost() throws Exception
+    {
+        // /////////////////Check edit a post /////////////////
+        // create a request change status of a post from user
+        ClientRequest request = new ClientRequest(URLConstant.EDIT_POST);
+        // accept with input type
+        request.accept("application/json");
+        // input infor to change
+        String postInput = "{\"id\": 1,\"title\": \"The First Article\",\"description\": \"This is a test edit\"}";
+        // get get infor
+        request.body("application/json", postInput);
+        // run operation and get respond
+        ClientResponse<Articles> responseSuccess = request.put(Articles.class);
+        
+        ///// return result with code 200 is successful!//////
+        assertEquals(responseSuccess.getStatus(), 200);
+        // close environment
+        responseSuccess.close();
+        
+        ////////Check edit with fields required//////////
+        postInput = "{\"id\": 1,\"title\": \"  \",\"description\": \"This is a test edit\"}";
+        request.body("application/json", postInput);
+        responseSuccess = request.put(Articles.class);
+        // return result with code 200 is successful!
+        assertEquals(responseSuccess.getStatus(), 1001);
+        // close environment
+        responseSuccess.close();
+    }
+    
 }

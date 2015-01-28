@@ -1,5 +1,7 @@
 package miniblog.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServlet;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -65,6 +67,7 @@ public class PostController extends HttpServlet {
 
     }
 
+    // change status
     @Path("/status")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
@@ -79,6 +82,42 @@ public class PostController extends HttpServlet {
         // set result return
         Articles re = articleService.getById(post.getId());
         ResultResponse result = new ResultResponse(status, re);
+        return Response.status(200).entity(result).build();
+    }
+
+    // Edit post
+    @Path("/edit")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response editPost(Articles article)
+    {
+        // Check fileds required
+        if (article.getTitle() == null || article.getDescription() == null || article.getId() == 0
+                || article.getDescription().isEmpty() || article.getTitle().isEmpty()
+                || !article.getTitle().matches(".*\\w.*") || !article.getDescription().matches(".*\\w.*"))
+        {
+            // set status return
+            StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1001).entity(result).build();
+        }
+        //create post
+        Articles post = new Articles();
+        //get current infor of post
+        post = articleService.getById(article.getId());
+        //set new infor
+        post.setDescription(article.getDescription());
+        post.setTitle(article.getTitle());
+        Date dayEdit = new Date();
+        post.setDate_modify(dayEdit);
+        //update post
+        articleService.update(post);
+        // set status
+        StatusResponse status = new StatusResponse(200, "Edit Post successful", "Edit success!");
+        // set result return
+        ResultResponse result = new ResultResponse(status, post);
         return Response.status(200).entity(result).build();
     }
 }
