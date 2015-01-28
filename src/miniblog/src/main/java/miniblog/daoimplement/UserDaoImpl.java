@@ -10,8 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-@Repository("iUserDao")
+@Repository("UserDaoImpl")
 public class UserDaoImpl<T extends Users> extends CommonDaoImpl<Users> implements IUserDao<T> {
     // Create a session
     @Autowired

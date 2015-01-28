@@ -18,7 +18,7 @@ public class Articles {
     private int id;
 
     @Column(name = "users_id")
-    private String users_id;
+    private int users_id;
 
     @Column(name = "title")
     private String title;
@@ -36,16 +36,23 @@ public class Articles {
     private String date_modify;
 
     public Articles() {
-
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        // get current date time with Date()
+        Date date = new Date();
+        // set date_create a post
+        this.date_create = dateFormat.format(date).toString();
     }
-
-    public Articles(String users_id, String title, String description, int status, String date_modify) {
-        super();
+    public Articles(int users_id, String title, String description, int status, String date_modify) {
         this.users_id = users_id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.date_modify = date_modify;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        // get current date time with Date()
+        Date date = new Date();
+        // set date_create a post
+        this.date_create = dateFormat.format(date).toString();
     }
 
     public int getId()
@@ -58,12 +65,12 @@ public class Articles {
         this.id = id;
     }
 
-    public String getUsers_id()
+    public int getUsers_id()
     {
         return users_id;
     }
 
-    public void setUsers_id(String users_id)
+    public void setUsers_id(int users_id)
     {
         this.users_id = users_id;
     }
@@ -98,6 +105,7 @@ public class Articles {
         this.status = status;
     }
 
+    @Column(name = "date_create")
     public String getDate_create()
     {
         // Format date

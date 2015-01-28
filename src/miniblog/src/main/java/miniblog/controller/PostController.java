@@ -3,7 +3,9 @@ package miniblog.controller;
 import javax.servlet.http.HttpServlet;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -23,7 +25,7 @@ public class PostController extends HttpServlet {
 
     // Create Article Service
     @Autowired
-    @Qualifier("iArticleService")
+    @Qualifier("ArticleServiceImpl")
     private IArticleService articleService;
 
     public PostController() {
@@ -32,12 +34,14 @@ public class PostController extends HttpServlet {
     // Post a article
     @Path("/add")
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addPost(Articles articles)
     {
         // Check fileds required
-        if (articles.getUsers_id() == null)
+        if (UserController.loginStatus == 0)
         {
+            System.out.println(UserController.loginStatus);
             // return if not login
             // set status
             StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
@@ -61,7 +65,7 @@ public class PostController extends HttpServlet {
             flat = articleService.add(articles);
         } catch (Exception e)
         {
-            // if post faild
+            e.fillInStackTrace();
             flat = false;
         }
         // return successful result !
@@ -72,14 +76,33 @@ public class PostController extends HttpServlet {
 
     }
 
-    // @Path("/status")
-    // @PUT
-    // @Produces(MediaType.APPLICATION_JSON)
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // public Response setActive(Articles acticle){
-    // Articles post = acticle;
-    // articleService.setActive(post);
-    // return Response.status(200).entity("Post successful!-----" +
-    // post.getStatus()).build();
-    // }
+    @Path("/status")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response setActive(Articles article)
+    {
+        // Check login or not
+        if (UserController.loginStatus == article.getUsers_id())
+        {
+            Articles post = article;
+            articleService.setActive(post);
+            // set status
+            StatusResponse status = new StatusResponse(200, "Active/Deactive Post successfully",
+                    "Active/Deactive Post success!");
+            // set result return
+            Articles re = articleService.getById(post.getId());
+            System.out.println(post.getId());
+            ResultResponse result = new ResultResponse(status, re);
+            return Response.status(200).entity(result).build();
+        } else
+        {
+            // return if not login
+            // set status
+            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            return Response.status(1002).entity(result).build();
+        }
+    }
 }

@@ -7,7 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-//@Repository("iArticleDao")
+@Repository("ArticleDaoImpl")
 public class ArticleDaoImpl<T extends Articles> extends CommonDaoImpl<Articles> implements IArticleDao<T> {
     // Create a session
     @Autowired

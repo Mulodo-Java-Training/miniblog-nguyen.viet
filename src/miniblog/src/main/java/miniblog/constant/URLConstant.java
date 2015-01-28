@@ -14,4 +14,5 @@ public class URLConstant {
     
     //POST URL
     public static final String ADD_POST = "http://localhost:8080/miniblog/posts/add";
+    public static final String ACTIVE_POST = "http://localhost:8080/miniblog/posts/status";
 }

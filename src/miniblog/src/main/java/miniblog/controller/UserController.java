@@ -30,18 +30,17 @@ import com.google.gson.Gson;
 public class UserController {
     // Create User Service
     @Autowired
-    @Qualifier("iUserService")
+    @Qualifier("UserServiceImpl")
     private IUserService userService;
 
     // Create Common controller
     private Commons commonController;
 
     // Create field to manager status login and logout
-    private int loginStatus;
+    static int loginStatus;
 
     public UserController() {
         this.commonController = new Commons();
-        this.loginStatus = 0;
     }
 
     // Register
@@ -125,6 +124,7 @@ public class UserController {
             setLogin(user.getId());
             // return if login success!
             // set status return
+            System.out.println(loginStatus);
             StatusResponse status = new StatusResponse(200, "User account was login successfully", "Login success!");
             // set result return
             ResultResponse result = new ResultResponse(status, user);
@@ -142,6 +142,7 @@ public class UserController {
     // Logout
     @Path("/logout")
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Response logout()
     {
         // check user login or not
