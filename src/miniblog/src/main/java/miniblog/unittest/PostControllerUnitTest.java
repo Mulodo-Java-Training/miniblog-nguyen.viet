@@ -1,16 +1,8 @@
 package miniblog.unittest;
 
 import static org.junit.Assert.assertEquals;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.ws.rs.core.MediaType;
-
 import miniblog.constant.URLConstant;
 import miniblog.controller.PostController;
-import miniblog.controller.UserController;
 import miniblog.entity.Articles;
 
 import org.jboss.resteasy.client.ClientRequest;
@@ -27,14 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class PostControllerUnitTest {
     @Autowired
     private PostController postController;
-    private UserController userController;
 
     // Create object CommonController to support test
     @Before
     public void setUp() throws Exception
     {
         postController = new PostController();
-        userController = new UserController();
     }
 
     @After
@@ -51,23 +41,6 @@ public class PostControllerUnitTest {
     @Test
     public void testAddPost() throws Exception
     {
-        // User Login
-        // create a request from client
-        ClientRequest request = new ClientRequest(URLConstant.LOGIN_USER);
-        // accept with input type
-        request.accept(MediaType.APPLICATION_JSON);
-        // input data
-        String input = "username=nguyen.viet&password=123456";
-        // push data
-        request.body(MediaType.APPLICATION_FORM_URLENCODED, input);
-        // get respone to check
-        ClientResponse<String> response = request.post(String.class);
-
-        // /////////// check login user success!////////////////
-        // return with code 200 is successful
-        assertEquals(response.getStatus(), 200);
-        // close response environment
-        response.close();
 
         // /////////////////Check create a post success/////////////////
         // create a request add post from user

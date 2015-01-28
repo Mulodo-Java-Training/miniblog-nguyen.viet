@@ -38,17 +38,6 @@ public class PostController extends HttpServlet {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addPost(Articles articles)
     {
-        // Check fileds required
-        if (UserController.loginStatus == 0)
-        {
-            System.out.println(UserController.loginStatus);
-            // return if not login
-            // set status
-            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, null);
-            return Response.status(1002).entity(result).build();
-        }
         if (articles.getTitle() == null)
         {
             // set status return
@@ -82,27 +71,14 @@ public class PostController extends HttpServlet {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setActive(Articles article)
     {
-        // Check login or not
-        if (UserController.loginStatus == article.getUsers_id())
-        {
-            Articles post = article;
-            articleService.setActive(post);
-            // set status
-            StatusResponse status = new StatusResponse(200, "Active/Deactive Post successfully",
-                    "Active/Deactive Post success!");
-            // set result return
-            Articles re = articleService.getById(post.getId());
-            System.out.println(post.getId());
-            ResultResponse result = new ResultResponse(status, re);
-            return Response.status(200).entity(result).build();
-        } else
-        {
-            // return if not login
-            // set status
-            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, null);
-            return Response.status(1002).entity(result).build();
-        }
+        Articles post = article;
+        articleService.setActive(post);
+        // set status
+        StatusResponse status = new StatusResponse(200, "Active/Deactive Post successfully",
+                "Active/Deactive Post success!");
+        // set result return
+        Articles re = articleService.getById(post.getId());
+        ResultResponse result = new ResultResponse(status, re);
+        return Response.status(200).entity(result).build();
     }
 }

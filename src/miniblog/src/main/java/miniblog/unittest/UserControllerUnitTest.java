@@ -136,13 +136,6 @@ public class UserControllerUnitTest {
     @Test
     public void testLogout()
     {
-        // set 0 for user not login in to system
-        userController.setLogin(0);
-        // get response with status 1002, this faild
-        assertEquals(userController.logout().getStatus(), 1002);
-
-        // set 1 for user have been login in to system
-        userController.setLogin(1);
         // get response with status 200, this successful!
         assertEquals(userController.logout().getStatus(), 200);
     }
@@ -156,8 +149,6 @@ public class UserControllerUnitTest {
     @Test
     public void testGetUserInfor() throws Exception
     {
-        // set 1 for user have been login in to system
-        userController.setLogin(1);
         // create a request from client
         ClientRequest request = new ClientRequest(URLConstant.INFOR_USER+"1");
         // get respone to check
@@ -178,8 +169,6 @@ public class UserControllerUnitTest {
     @Test
     public void testUpdateUser() throws Exception
     {
-        // set 1 for user have been login in to system
-        userController.setLogin(1);
         // create a request from client
         ClientRequest request = new ClientRequest(URLConstant.UPDATE_USER);
         // accept with input type
@@ -206,8 +195,6 @@ public class UserControllerUnitTest {
     @Test
     public void testChangePass() throws Exception
     {
-        // set 1 for user have been login in to system
-        userController.setLogin(1);
         // create a request from client
         ClientRequest request = new ClientRequest(URLConstant.CHANGEPASS_USER);
         // accept with input type
@@ -233,8 +220,6 @@ public class UserControllerUnitTest {
     @Test
     public void testSearchByName() throws Exception
     {
-        // set 1 for user have been login in to system
-        userController.setLogin(1);
         // create a request from client
         ClientRequest request = new ClientRequest(URLConstant.SEARCH_USER);
         // accept with input type

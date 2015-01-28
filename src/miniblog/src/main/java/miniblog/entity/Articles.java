@@ -1,13 +1,14 @@
 package miniblog.entity;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import miniblog.util.DateAdapter;
 
 @Entity
 @Table(name = "Articles")
@@ -30,29 +31,17 @@ public class Articles {
     private int status;
 
     @Column(name = "date_create")
-    private String date_create;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date date_create;
 
     @Column(name = "date_modify")
-    private String date_modify;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date date_modify;
 
     public Articles() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        // get current date time with Date()
         Date date = new Date();
         // set date_create a post
-        this.date_create = dateFormat.format(date).toString();
-    }
-    public Articles(int users_id, String title, String description, int status, String date_modify) {
-        this.users_id = users_id;
-        this.title = title;
-        this.description = description;
-        this.status = status;
-        this.date_modify = date_modify;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        // get current date time with Date()
-        Date date = new Date();
-        // set date_create a post
-        this.date_create = dateFormat.format(date).toString();
+        this.date_create = date;
     }
 
     public int getId()
@@ -105,23 +94,17 @@ public class Articles {
         this.status = status;
     }
 
-    @Column(name = "date_create")
-    public String getDate_create()
+    public Date getDate_create()
     {
-        // Format date
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        // get current date time with Date()
-        Date date = new Date();
-        // set date_create a post
-        return this.date_create = dateFormat.format(date).toString();
+        return this.date_create;
     }
 
-    public String getDate_modify()
+    public Date getDate_modify()
     {
         return date_modify;
     }
 
-    public void setDate_modify(String date_modify)
+    public void setDate_modify(Date date_modify)
     {
         this.date_modify = date_modify;
     }

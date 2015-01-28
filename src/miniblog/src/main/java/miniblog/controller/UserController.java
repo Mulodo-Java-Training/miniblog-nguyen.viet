@@ -36,9 +36,6 @@ public class UserController {
     // Create Common controller
     private Commons commonController;
 
-    // Create field to manager status login and logout
-    static int loginStatus;
-
     public UserController() {
         this.commonController = new Commons();
     }
@@ -120,11 +117,8 @@ public class UserController {
         // check get success or not
         if (user != null)
         {
-            // set data user login
-            setLogin(user.getId());
             // return if login success!
             // set status return
-            System.out.println(loginStatus);
             StatusResponse status = new StatusResponse(200, "User account was login successfully", "Login success!");
             // set result return
             ResultResponse result = new ResultResponse(status, user);
@@ -145,26 +139,11 @@ public class UserController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response logout()
     {
-        // check user login or not
-        if (checkLogin() > 0)
-        {
-            // reset login status
-            loginStatus = 0;
-            // return with login successful
-            // set status
-            StatusResponse status = new StatusResponse(200, "User logout successfully", "Logout success!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, null);
-            return Response.status(200).entity(result).build();
-        } else
-        {
-            // return when login faild because not login first
-            // set status
-            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, null);
-            return Response.status(1002).entity(result).build();
-        }
+        // set status
+        StatusResponse status = new StatusResponse(200, "User logout successfully", "Logout success!");
+        // set result return
+        ResultResponse result = new ResultResponse(status, null);
+        return Response.status(200).entity(result).build();
     }
 
     // Get user by id
@@ -182,30 +161,18 @@ public class UserController {
             return Response.status(1001).entity(result).build();
         }
         int userId = Integer.valueOf(id);
-        // check user login or not
-        if (checkLogin() == userId)
+        // get data to add user
+        Users user = userService.getById(Integer.valueOf(userId));
+        if (user == null)
         {
-            // get data to add user
-            Users user = userService.getById(Integer.valueOf(userId));
-            if (user == null)
-            {
-                user = new Users();
-            }
-            // set status return
-            StatusResponse status = new StatusResponse(200, "Get user information successfully.", "Get data success!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, user);
-            // return result
-            return Response.status(200).entity(result).build();
-        } else
-        {
-            // return when login faild because not login first
-            // set status
-            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, null);
-            return Response.status(1002).entity(result).build();
+            user = new Users();
         }
+        // set status return
+        StatusResponse status = new StatusResponse(200, "Get user information successfully.", "Get data success!");
+        // set result return
+        ResultResponse result = new ResultResponse(status, user);
+        // return result
+        return Response.status(200).entity(result).build();
     }
 
     // update user by id
@@ -225,34 +192,21 @@ public class UserController {
         }
         // create a user
         Users user = new Users();
-        // get information of user from database with user id of client login
+        // get information of user from database with user id 
         user = userService.getById(u.getId());
         // change information client want
         user.setFirstname(u.getFirstname());
         user.setLastname(u.getLastname());
         user.setBirthday(u.getBirthday());
         user.setEmail(u.getEmail());
-        // check user login or not and permission to update
-        if (checkLogin() == u.getId())
-        {
-            // user update
-            userService.update(user);
-            // return status and user infor success
-            // set status return
-            StatusResponse status = new StatusResponse(200, "User updated successfully.", "updated successful!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, user);
-            return Response.status(200).entity(result).build();
-        } else
-        {
-            setLogin(0);
-            // return if not login
-            // set status
-            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, null);
-            return Response.status(1002).entity(result).build();
-        }
+        // user update
+        userService.update(user);
+        // return status and user infor success
+        // set status return
+        StatusResponse status = new StatusResponse(200, "User updated successfully.", "updated successful!");
+        // set result return
+        ResultResponse result = new ResultResponse(status, user);
+        return Response.status(200).entity(result).build();
     }
 
     // Change user password
@@ -272,31 +226,18 @@ public class UserController {
         }
         // create a user
         Users user = new Users();
-        // get information of user from database with user id of client login
+        // get information of user from database with user id 
         user = userService.getById(u.getId());
         // change password client want
         user.setPassword(commonController.MD5(u.getPassword()));
-        // check user login or not and permission to update
-        if (checkLogin() == u.getId())
-        {
-            // user update password
-            userService.update(user);
-            // Create Gson to parse object to json
-            // set status return
-            StatusResponse status = new StatusResponse(200, "Changed password successfully.", "Changed success!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, user);
-            return Response.status(200).entity(result).build();
-        } else
-        {
-            setLogin(0);
-            // return if not login
-            // set status
-            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
-            // set result return
-            ResultResponse result = new ResultResponse(status, null);
-            return Response.status(1002).entity(result).build();
-        }
+        // user update password
+        userService.update(user);
+        // Create Gson to parse object to json
+        // set status return
+        StatusResponse status = new StatusResponse(200, "Changed password successfully.", "Changed success!");
+        // set result return
+        ResultResponse result = new ResultResponse(status, user);
+        return Response.status(200).entity(result).build();
     }
 
     // Search user by name
@@ -308,51 +249,27 @@ public class UserController {
     {
         // get user have the same name with client input
         List<Users> users = userService.getUsersByName(name);
-        // check user login or not
-        if (checkLogin() > 0)
+        // check have or not user in database match name searching
+        if (users != null)
         {
-            // check have or not user in database match name searching
-            if (users != null)
-            {
-                // Create Gson to parse object to json
-                Gson gson = new Gson();
-                // return if exist
-                StatusResponse status = new StatusResponse(200, "Search user information successfully.",
-                        "Get data success!");
-                // set result return
-                ResultResponse result = new ResultResponse(status, users);
-                return Response.status(200).entity(result).build();
-            } else
-            {
-                // return if not
-                // set status
-                StatusResponse status = new StatusResponse(9001, "Data not exist", "Search Faild!");
-                // set result return
-                ResultResponse result = new ResultResponse(status, null);
-                return Response.status(9001).entity(result).build();
-            }
+            // Create Gson to parse object to json
+            Gson gson = new Gson();
+            // return if exist
+            StatusResponse status = new StatusResponse(200, "Search user information successfully.",
+                    "Get data success!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, users);
+            return Response.status(200).entity(result).build();
         } else
         {
-            // return if not login
+            // return if not
             // set status
-            StatusResponse status = new StatusResponse(1002, "Check login first", "You are not login!");
+            StatusResponse status = new StatusResponse(9001, "Data not exist", "Search Faild!");
             // set result return
             ResultResponse result = new ResultResponse(status, null);
-            return Response.status(1002).entity(result).build();
+            return Response.status(9001).entity(result).build();
         }
 
-    }
-
-    // Check user login or not(status 0 = not, status > 0 = login)
-    public int checkLogin()
-    {
-        return loginStatus;
-    }
-
-    // Set user login or not
-    public void setLogin(int loginstt)
-    {
-        loginStatus = loginstt;
     }
 
     // Delete User
