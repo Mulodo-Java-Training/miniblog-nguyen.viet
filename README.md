@@ -1,6 +1,6 @@
 =======================Hệ thống "Mini Blog"==============================
-Yêu cầu
-Suy nghĩ, thiết kế một hệ thống giống như mini blog, cho phép user login, post bài viết, tìm kiếm bài viết cũng như comment trên các bài viết.
+
+Yêu cầu suy nghĩ, thiết kế một hệ thống giống như mini blog, cho phép user login, post bài viết, tìm kiếm bài viết cũng như comment trên các bài viết.
 Hệ thống bao gồm 2 thành phần: Front-End (Web Application/Smart Phone Application) và Back-End (API).
 Các chức năng chính
 Front-End:
