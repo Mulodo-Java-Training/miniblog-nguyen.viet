@@ -3,7 +3,7 @@ package miniblog.unittest;
 import static org.junit.Assert.assertEquals;
 import miniblog.constant.URLConstant;
 import miniblog.controller.PostController;
-import miniblog.entity.Articles;
+import miniblog.util.ResultResponse;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author NguyenLeQuoc
  *
  */
+@SuppressWarnings("deprecation")
 public class PostControllerUnitTest {
     @Autowired
     private PostController postController;
 
-    // Create object CommonController to support test
     @Before
     public void setUp() throws Exception
     {
@@ -37,7 +37,6 @@ public class PostControllerUnitTest {
      * 
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testAddPost() throws Exception
     {
@@ -48,12 +47,11 @@ public class PostControllerUnitTest {
         // accept with input type
         requestAddPost.accept("application/json");
         // input post infor
-        String postInput = "{\"users_id\": 1,\"title\": \"The First Article\","
-                + "\"description\": \"This is a test\"}";
+        String postInput = "{\"users_id\": 1,\"title\": \"Test add Article\"," + "\"description\": \"This is a test\"}";
         // get post infor
         requestAddPost.body("application/json", postInput);
         // run operation and get respond
-        ClientResponse<Articles> responseSuccess = requestAddPost.post(Articles.class);
+        ClientResponse<ResultResponse> responseSuccess = requestAddPost.post(ResultResponse.class);
         // return result add post with code 200 is successful!
         assertEquals(responseSuccess.getStatus(), 200);
         // close environment
@@ -65,25 +63,24 @@ public class PostControllerUnitTest {
         // get data
         requestAddPost.body("application/json", postInput);
         // run operation and get respond
-        ClientResponse<Articles> responseFields = requestAddPost.post(Articles.class);
+        ClientResponse<ResultResponse> responseFields = requestAddPost.post(ResultResponse.class);
         // return add post with code 1001 is faild because user not input
         // enought post infor!
         assertEquals(responseFields.getStatus(), 1001);
         // close environment
         responseFields.close();
     }
-    
-    
+
     /**
      * Test method add change status
      * 
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testSetActive() throws Exception
     {
-        // /////////////////Check change status of a post success/////////////////
+        // /////////////////Check change status of a post
+        // success/////////////////
         // create a request change status of a post from user
         ClientRequest request = new ClientRequest(URLConstant.ACTIVE_POST);
         // accept with input type
@@ -93,24 +90,23 @@ public class PostControllerUnitTest {
         // get get infor
         request.body("application/json", input);
         // run operation and get respond
-        ClientResponse<Articles> responseSuccess = request.put(Articles.class);
+        ClientResponse<ResultResponse> responseSuccess = request.put(ResultResponse.class);
         // return result with code 200 is successful!
         assertEquals(responseSuccess.getStatus(), 200);
         // close environment
         responseSuccess.close();
     }
-    
+
     /**
      * Test method add edit post
      * 
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testEditPost() throws Exception
     {
         // /////////////////Check edit a post /////////////////
-        // create a request change status of a post from user
+        // create a request edit a post from user
         ClientRequest request = new ClientRequest(URLConstant.EDIT_POST);
         // accept with input type
         request.accept("application/json");
@@ -119,21 +115,80 @@ public class PostControllerUnitTest {
         // get get infor
         request.body("application/json", postInput);
         // run operation and get respond
-        ClientResponse<Articles> responseSuccess = request.put(Articles.class);
-        
-        ///// return result with code 200 is successful!//////
+        ClientResponse<ResultResponse> responseSuccess = request.put(ResultResponse.class);
+
+        // /// return result with code 200 is successful!//////
         assertEquals(responseSuccess.getStatus(), 200);
         // close environment
         responseSuccess.close();
-        
-        ////////Check edit with fields required//////////
+
+        // //////Check edit with fields required//////////
         postInput = "{\"id\": 1,\"title\": \"  \",\"description\": \"This is a test edit\"}";
         request.body("application/json", postInput);
-        responseSuccess = request.put(Articles.class);
+        responseSuccess = request.put(ResultResponse.class);
         // return result with code 200 is successful!
         assertEquals(responseSuccess.getStatus(), 1001);
         // close environment
         responseSuccess.close();
     }
-    
+
+    /**
+     * Test method add delete post
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testDeletePost() throws Exception
+    {
+        // /////////////////Check delete a post /////////////////
+        // set example postID = 2
+        int postID = 2;
+        // create a request change status of a post from user
+        ClientRequest request = new ClientRequest(URLConstant.DELETE_POST + postID);
+        // run operation and get respond
+        ClientResponse<ResultResponse> responseSuccess = request.delete(ResultResponse.class);
+        // /// return result with code 200 is successful!//////
+        assertEquals(responseSuccess.getStatus(), 200);
+        // close environment
+        responseSuccess.close();
+
+    }
+
+    /**
+     * Test method get all Posts
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetListPost() throws Exception
+    {
+        // create a request all posts from user
+        ClientRequest request = new ClientRequest(URLConstant.LIST_POST);
+        // run operation and get respond
+        ClientResponse<ResultResponse> responseSuccess = request.get(ResultResponse.class);
+        // /// return result with code 200 is successful!//////
+        assertEquals(responseSuccess.getStatus(), 200);
+        // close environment
+        responseSuccess.close();
+    }
+
+    /**
+     * Test method get all Posts by user
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetAllPostsByUser() throws Exception
+    {
+        // set user id to test
+        int userID = 1;
+        // create a request get posts by user id
+        ClientRequest request = new ClientRequest(URLConstant.USER_POST + userID);
+        // run operation and get respond
+        ClientResponse<ResultResponse> responseSuccess = request.get(ResultResponse.class);
+        // /// return result with code 200 is successful!//////
+        assertEquals(responseSuccess.getStatus(), 200);
+        // close environment
+        responseSuccess.close();
+    }
 }
