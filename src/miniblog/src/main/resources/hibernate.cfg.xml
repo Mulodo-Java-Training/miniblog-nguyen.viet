@@ -8,6 +8,6 @@
 		<property name="hibernate.current_session_context_class">thread</property>
 		<mapping class="miniblog.entity.Users" />
 		<mapping class="miniblog.entity.Articles" />
-
+		<mapping class="miniblog.entity.Comments" />
 	</session-factory>
 </hibernate-configuration>

@@ -2,15 +2,17 @@ package miniblog.unittest;
 
 import static org.junit.Assert.assertEquals;
 import miniblog.constant.URLConstant;
-import miniblog.controller.PostController;
+import miniblog.entity.Articles;
 import miniblog.util.ResultResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.Gson;
 
 /**
  * @author NguyenLeQuoc
@@ -18,13 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @SuppressWarnings("deprecation")
 public class PostControllerUnitTest {
-    @Autowired
-    private PostController postController;
 
     @Before
     public void setUp() throws Exception
     {
-        postController = new PostController();
     }
 
     @After
@@ -40,8 +39,7 @@ public class PostControllerUnitTest {
     @Test
     public void testAddPost() throws Exception
     {
-
-        // /////////////////Check create a post success/////////////////
+        /* CHECK ADD POST SUCCESS */
         // create a request add post from user
         ClientRequest requestAddPost = new ClientRequest(URLConstant.ADD_POST);
         // accept with input type
@@ -54,10 +52,20 @@ public class PostControllerUnitTest {
         ClientResponse<ResultResponse> responseSuccess = requestAddPost.post(ResultResponse.class);
         // return result add post with code 200 is successful!
         assertEquals(responseSuccess.getStatus(), 200);
+
+        /* GET ID OF POST JUST ADD TO DELETE AFTER */
+        // Create json object
+        Gson gson = new Gson();
+        // Parse result return to ResultResponse object
+        ResultResponse result = gson.fromJson(responseSuccess.getEntity(String.class), ResultResponse.class);
+        // Parse Data object(json format) of ResultResponse to Article
+        Articles post = new ObjectMapper().readValue(gson.toJson(result.getData()), Articles.class);
+        // Get id of post add
+        int articleID = post.getId();
         // close environment
         responseSuccess.close();
 
-        // ////////////////Check Fields are required/////////////
+        /* CHECK FIELDS REQUIRED */
         // input post infor with miss a field title
         postInput = "{\"users_id\": 1,\"description\": \"This is a test 2\"}";
         // get data
@@ -69,6 +77,11 @@ public class PostControllerUnitTest {
         assertEquals(responseFields.getStatus(), 1001);
         // close environment
         responseFields.close();
+
+        /* DELETE POST JUST ADD */
+        ClientRequest requestDelete = new ClientRequest(URLConstant.DELETE_POST + articleID);
+        // run operation and get respond
+        requestDelete.delete(ResultResponse.class);
     }
 
     /**
@@ -79,22 +92,51 @@ public class PostControllerUnitTest {
     @Test
     public void testSetActive() throws Exception
     {
-        // /////////////////Check change status of a post
-        // success/////////////////
-        // create a request change status of a post from user
-        ClientRequest request = new ClientRequest(URLConstant.ACTIVE_POST);
+        /* CHECK CHANGE STATUS */
+        // create a request add post from user to test change status
+        ClientRequest requestAddPost = new ClientRequest(URLConstant.ADD_POST);
         // accept with input type
-        request.accept("application/json");
-        // input infor to change
-        String input = "{\"users_id\": 1,\"id\": 1,\"status\": 1}";
-        // get get infor
-        request.body("application/json", input);
+        requestAddPost.accept("application/json");
+        // input post infor
+        String postInput = "{\"users_id\": 1,\"title\": \"Test add Article\"," + "\"description\": \"This is a test\"}";
+        // get post infor
+        requestAddPost.body("application/json", postInput);
         // run operation and get respond
-        ClientResponse<ResultResponse> responseSuccess = request.put(ResultResponse.class);
+        ClientResponse<ResultResponse> responseAdd = requestAddPost.post(ResultResponse.class);
+        // return result add post with code 200 is successful!
+        assertEquals(responseAdd.getStatus(), 200);
+
+        /* GET ID OF POST JUST ADD TO DELETE AFTER */
+        // Create json object
+        Gson gson = new Gson();
+        // Parse result return to ResultResponse object
+        ResultResponse result = gson.fromJson(responseAdd.getEntity(String.class), ResultResponse.class);
+        // Parse Data object(json format) of ResultResponse to Article
+        Articles post = new ObjectMapper().readValue(gson.toJson(result.getData()), Articles.class);
+        // Get id of post add
+        int articleID = post.getId();
+        // close environment
+        responseAdd.close();
+
+        // create a request change status of a post from user
+        ClientRequest requestChange = new ClientRequest(URLConstant.ACTIVE_POST);
+        // accept with input type
+        requestChange.accept("application/json");
+        // input infor to change
+        String input = "{\"id\": " + articleID + ",\"status\": 0}";
+        // get get infor
+        requestChange.body("application/json", input);
+        // run operation and get respond
+        ClientResponse<ResultResponse> responseSuccess = requestChange.put(ResultResponse.class);
         // return result with code 200 is successful!
         assertEquals(responseSuccess.getStatus(), 200);
         // close environment
         responseSuccess.close();
+
+        /* DELETE POST JUST ADD EDIT */
+        ClientRequest requestDelete = new ClientRequest(URLConstant.DELETE_POST + articleID);
+        // run operation and get respond
+        requestDelete.delete(ResultResponse.class);
     }
 
     /**
@@ -105,24 +147,49 @@ public class PostControllerUnitTest {
     @Test
     public void testEditPost() throws Exception
     {
-        // /////////////////Check edit a post /////////////////
+        /* Check edit a post */
+        // create a request add post from user to test change status
+        ClientRequest requestAddPost = new ClientRequest(URLConstant.ADD_POST);
+        // accept with input type
+        requestAddPost.accept("application/json");
+        // input post infor
+        String postInput = "{\"users_id\": 1,\"title\": \"Test add Article\"," + "\"description\": \"This is a test\"}";
+        // get post infor
+        requestAddPost.body("application/json", postInput);
+        // run operation and get respond
+        ClientResponse<ResultResponse> responseAdd = requestAddPost.post(ResultResponse.class);
+        // return result add post with code 200 is successful!
+        assertEquals(responseAdd.getStatus(), 200);
+
+        /* GET ID OF POST JUST ADD TO DELETE AFTER */
+        // Create json object
+        Gson gson = new Gson();
+        // Parse result return to ResultResponse object
+        ResultResponse result = gson.fromJson(responseAdd.getEntity(String.class), ResultResponse.class);
+        // Parse Data object(json format) of ResultResponse to Article
+        Articles post = new ObjectMapper().readValue(gson.toJson(result.getData()), Articles.class);
+        // Get id of post add
+        int articleID = post.getId();
+        // close environment
+        responseAdd.close();
+
         // create a request edit a post from user
         ClientRequest request = new ClientRequest(URLConstant.EDIT_POST);
         // accept with input type
         request.accept("application/json");
         // input infor to change
-        String postInput = "{\"id\": 1,\"title\": \"The First Article\",\"description\": \"This is a test edit\"}";
+        String postNew = "{\"id\": " + articleID
+                + ",\"title\": \"The First Article\",\"description\": \"This is a test edit\"}";
         // get get infor
-        request.body("application/json", postInput);
+        request.body("application/json", postNew);
         // run operation and get respond
         ClientResponse<ResultResponse> responseSuccess = request.put(ResultResponse.class);
-
         // /// return result with code 200 is successful!//////
         assertEquals(responseSuccess.getStatus(), 200);
         // close environment
         responseSuccess.close();
 
-        // //////Check edit with fields required//////////
+        /* Check edit with fields required */
         postInput = "{\"id\": 1,\"title\": \"  \",\"description\": \"This is a test edit\"}";
         request.body("application/json", postInput);
         responseSuccess = request.put(ResultResponse.class);
@@ -130,6 +197,11 @@ public class PostControllerUnitTest {
         assertEquals(responseSuccess.getStatus(), 1001);
         // close environment
         responseSuccess.close();
+
+        /* DELETE POST JUST ADD EDIT */
+        ClientRequest requestDelete = new ClientRequest(URLConstant.DELETE_POST + articleID);
+        // run operation and get respond
+        requestDelete.delete(ResultResponse.class);
     }
 
     /**
@@ -140,17 +212,36 @@ public class PostControllerUnitTest {
     @Test
     public void testDeletePost() throws Exception
     {
-        // /////////////////Check delete a post /////////////////
-        // set example postID = 2
-        int postID = 2;
-        // create a request change status of a post from user
-        ClientRequest request = new ClientRequest(URLConstant.DELETE_POST + postID);
+        /*CHECK DELETE POST*/
+        // create a request add post from user to try delete
+        ClientRequest requestAddPost = new ClientRequest(URLConstant.ADD_POST);
+        // accept with input type
+        requestAddPost.accept("application/json");
+        // input post infor
+        String postInput = "{\"users_id\": 1,\"title\": \"Test add Article\","
+                + "\"description\": \"This is a test to delete\"}";
+        // get post infor
+        requestAddPost.body("application/json", postInput);
         // run operation and get respond
-        ClientResponse<ResultResponse> responseSuccess = request.delete(ResultResponse.class);
+        ClientResponse<ResultResponse> responseSuccess = requestAddPost.post(ResultResponse.class);
+
+        /* Get Id of post to delete */
+        // Create json object
+        Gson gson = new Gson();
+        // Parse result return to ResultResponse object
+        ResultResponse result = gson.fromJson(responseSuccess.getEntity(String.class), ResultResponse.class);
+        // Parse Data object(json format) of ResultResponse to Article
+        Articles post = new ObjectMapper().readValue(gson.toJson(result.getData()), Articles.class);
+        // Get id of post add
+        int postID = post.getId();
+        // create a request delete of a post from user
+        ClientRequest requestDelete = new ClientRequest(URLConstant.DELETE_POST + postID);
+        // run operation and get respond
+        ClientResponse<ResultResponse> responseDelete = requestDelete.delete(ResultResponse.class);
         // /// return result with code 200 is successful!//////
-        assertEquals(responseSuccess.getStatus(), 200);
+        assertEquals(responseDelete.getStatus(), 200);
         // close environment
-        responseSuccess.close();
+        responseDelete.close();
 
     }
 

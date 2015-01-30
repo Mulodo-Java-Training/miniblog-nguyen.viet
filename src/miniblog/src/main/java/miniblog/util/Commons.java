@@ -62,4 +62,9 @@ public class Commons {
         //return password have been converted type MD5
         return convertToHex(md5hash);
     }
+    
+    public String findIdReturn(String text){
+        text.indexOf("id");
+        return text;
+    }
 }

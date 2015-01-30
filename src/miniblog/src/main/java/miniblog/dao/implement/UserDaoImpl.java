@@ -23,7 +23,6 @@ public class UserDaoImpl<T extends Users> extends CommonDaoImpl<Users> implement
     {
         // set name format to find in database
         String nameSearch = "%" + name + "%";
-        System.out.println(nameSearch);
         // create session
         Session s = sessionFactory.getCurrentSession();
         // begin transaction

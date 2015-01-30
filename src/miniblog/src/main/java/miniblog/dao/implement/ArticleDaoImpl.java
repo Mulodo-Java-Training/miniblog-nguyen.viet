@@ -29,7 +29,7 @@ public class ArticleDaoImpl<T extends Articles> extends CommonDaoImpl<Articles> 
                 .executeUpdate();
 
         s.close();
-        return false;
+        return true;
     }
 
     @SuppressWarnings("unchecked")

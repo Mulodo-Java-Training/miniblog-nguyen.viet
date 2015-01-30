@@ -7,42 +7,50 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import miniblog.util.DateAdapter;
 
 @Entity
-@Table(name = "Articles")
-public class Articles {
+@Table(name = "Comments")
+public class Comments {
 
     @Id
     @Column(name = "id")
     @GeneratedValue
+    @XmlAttribute(name = "id")
     private int id;
 
     @Column(name = "users_id")
+    @XmlElement(name = "users_id")
     private int users_id;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "articles_id")
+    @XmlElement(name = "articles_id")
+    private int articles_id;
 
     @Column(name = "description")
+    @XmlElement(name = "description")
     private String description;
 
     @Column(name = "status")
+    @XmlElement(name = "status")
     private int status;
 
     @Column(name = "date_create")
     @XmlJavaTypeAdapter(DateAdapter.class)
+    @XmlElement(name = "date_create")
     private Date date_create;
 
     @Column(name = "date_modify")
+    @XmlElement(name = "date_modify")
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date date_modify;
 
-    public Articles() {
+    public Comments() {
         Date date = new Date();
-        // set date_create a post
         this.date_create = date;
     }
 
@@ -66,14 +74,19 @@ public class Articles {
         this.users_id = users_id;
     }
 
-    public String getTitle()
+    public int getArticles_id()
     {
-        return title;
+        return articles_id;
     }
 
-    public void setTitle(String title)
+    public void setArticles_id(int article_id)
     {
-        this.title = title;
+        this.articles_id = article_id;
+    }
+
+    public void setDate_create(Date date_create)
+    {
+        this.date_create = date_create;
     }
 
     public String getDescription()
