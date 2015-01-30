@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author NguyenLeQuoc
  *
  */
+@SuppressWarnings("deprecation")
 public class UserControllerUnitTest {
     // Create object Usercontroller to test
     @Autowired
@@ -45,7 +46,6 @@ public class UserControllerUnitTest {
      * 
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testAddUser() throws Exception
     {
@@ -96,7 +96,6 @@ public class UserControllerUnitTest {
      * 
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testLogin() throws Exception
     {
@@ -145,7 +144,6 @@ public class UserControllerUnitTest {
      * 
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testGetUserInfor() throws Exception
     {
@@ -165,7 +163,6 @@ public class UserControllerUnitTest {
      * 
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testUpdateUser() throws Exception
     {
@@ -175,7 +172,7 @@ public class UserControllerUnitTest {
         request.accept("application/json");
         // input data
         String userInput = "{\"id\": \"1\", " + "\"lastname\": \"nguyen\", " + "\"firstname\": \"viet\", "
-                + "\"birthday\": \"2014-5-11\", " + "\"email\":\"viet@yahoo.com\"}";
+                + "\"email\":\"viet@yahoo.com\"}";
         // get data
         request.body("application/json", userInput);
         // run operation and get respond
@@ -191,7 +188,6 @@ public class UserControllerUnitTest {
      * 
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testChangePass() throws Exception
     {
@@ -216,7 +212,6 @@ public class UserControllerUnitTest {
      * 
      * @throws Exception
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testSearchByName() throws Exception
     {

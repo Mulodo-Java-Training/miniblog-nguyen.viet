@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import miniblog.entity.Users;
-import miniblog.serviceinterface.IUserService;
+import miniblog.service.interfaces.IUserService;
 import miniblog.util.Commons;
 import miniblog.util.ResultResponse;
 import miniblog.util.StatusResponse;
@@ -22,8 +22,6 @@ import miniblog.util.StatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-
-import com.google.gson.Gson;
 
 @Path("users")
 @Controller
@@ -150,19 +148,11 @@ public class UserController {
     @Path("/infor/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserInfor(@PathParam("id") String id)
+    public Response getUserInfor(@PathParam("id") int id)
     {
-        if (id.isEmpty() || id == null || id.matches("\\s+"))
-        {
-            // set status return
-            StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
-            // set result return
-            ResultResponse result = new ResultResponse(status, null);
-            return Response.status(1001).entity(result).build();
-        }
-        int userId = Integer.valueOf(id);
+
         // get data to add user
-        Users user = userService.getById(Integer.valueOf(userId));
+        Users user = userService.getById(id);
         if (user == null)
         {
             user = new Users();
@@ -182,7 +172,7 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(Users u)
     {
-        if (u.getFirstname() == null || u.getLastname() == null || u.getBirthday() == null || u.getEmail() == null)
+        if (u.getFirstname() == null || u.getLastname() == null || u.getEmail() == null)
         {
             // set status return
             StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
@@ -192,7 +182,7 @@ public class UserController {
         }
         // create a user
         Users user = new Users();
-        // get information of user from database with user id 
+        // get information of user from database with user id
         user = userService.getById(u.getId());
         // change information client want
         user.setFirstname(u.getFirstname());
@@ -226,7 +216,7 @@ public class UserController {
         }
         // create a user
         Users user = new Users();
-        // get information of user from database with user id 
+        // get information of user from database with user id
         user = userService.getById(u.getId());
         // change password client want
         user.setPassword(commonController.MD5(u.getPassword()));
@@ -252,8 +242,6 @@ public class UserController {
         // check have or not user in database match name searching
         if (users != null)
         {
-            // Create Gson to parse object to json
-            Gson gson = new Gson();
             // return if exist
             StatusResponse status = new StatusResponse(200, "Search user information successfully.",
                     "Get data success!");

@@ -15,4 +15,8 @@ public class URLConstant {
     //POST URL
     public static final String ADD_POST = "http://localhost:8080/miniblog/posts/add";
     public static final String ACTIVE_POST = "http://localhost:8080/miniblog/posts/status";
+    public static final String EDIT_POST = "http://localhost:8080/miniblog/posts/edit";
+    public static final String DELETE_POST = "http://localhost:8080/miniblog/posts/delete/";
+    public static final String LIST_POST = "http://localhost:8080/miniblog/posts/list";
+    public static final String USER_POST = "http://localhost:8080/miniblog/posts/listby/";
 }
