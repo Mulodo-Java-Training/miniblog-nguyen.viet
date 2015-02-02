@@ -38,7 +38,7 @@ public class PostController extends HttpServlet {
     public PostController() {
     }
 
-    // Post a article
+    // ADD POST
     @SuppressWarnings("unused")
     @Path("/add")
     @POST
@@ -46,7 +46,7 @@ public class PostController extends HttpServlet {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addPost(Articles articles)
     {
-        if (articles.getTitle() == null)
+        if (articles.getTitle() == null || !articles.getTitle().matches(".*\\w.*") || articles.getTitle().isEmpty())
         {
             // set status return
             StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
@@ -70,10 +70,9 @@ public class PostController extends HttpServlet {
         // set result return
         ResultResponse result = new ResultResponse(status, articles);
         return Response.status(200).entity(result).build();
-
     }
 
-    // change status
+    // CHANGE STATUS OF POST
     @Path("/status")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
@@ -82,6 +81,8 @@ public class PostController extends HttpServlet {
     {
         Articles post = article;
         articleService.setActive(post);
+        System.out.println(post.getId());
+        System.out.println(articleService.setActive(post));
         // set status
         StatusResponse status = new StatusResponse(200, "Active/Deactive Post successfully",
                 "Active/Deactive Post success!");
@@ -91,7 +92,7 @@ public class PostController extends HttpServlet {
         return Response.status(200).entity(result).build();
     }
 
-    // Edit post
+    // EDIT POST
     @Path("/edit")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
@@ -109,16 +110,16 @@ public class PostController extends HttpServlet {
             ResultResponse result = new ResultResponse(status, null);
             return Response.status(1001).entity(result).build();
         }
-        //create post
+        // create post
         Articles post = new Articles();
-        //get current infor of post
+        // get current infor of post
         post = articleService.getById(article.getId());
-        //set new infor
+        // set new infor
         post.setDescription(article.getDescription());
         post.setTitle(article.getTitle());
         Date dayEdit = new Date();
         post.setDate_modify(dayEdit);
-        //update post
+        // update post
         articleService.update(post);
         // set status
         StatusResponse status = new StatusResponse(200, "Edit Post successful", "Edit success!");
@@ -126,14 +127,14 @@ public class PostController extends HttpServlet {
         ResultResponse result = new ResultResponse(status, post);
         return Response.status(200).entity(result).build();
     }
-    
-    //delete post
+
+    // DELETE POST
     @Path("/delete/{id}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deletePost(@PathParam("id") String id)
+    public Response deletePost(@PathParam("id") int id)
     {
-        if (id.isEmpty() || id == null || !id.matches(".*\\w.*"))
+        if (id == 0)
         {
             // set status return
             StatusResponse status = new StatusResponse(1001, "Input validation failed.", "Filed is required.");
@@ -141,47 +142,47 @@ public class PostController extends HttpServlet {
             ResultResponse result = new ResultResponse(status, null);
             return Response.status(1001).entity(result).build();
         }
-        int article_id = Integer.valueOf(id);
-        // get data to add user
-        articleService.delete(article_id);
-        //set status
+        // delete
+        articleService.delete(id);
+        // set status
         StatusResponse status = new StatusResponse(200, "Delete post successfully", "Delete success!");
         // set result return
         ResultResponse result = new ResultResponse(status, null);
         // return result
         return Response.status(200).entity(result).build();
     }
-    
-    //get all post
+
+    // GET ALL POST
     @Path("/list")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPosts()
     {
-        //create a list to hold data return
+        // create a list to hold data return
         List<Articles> list = new ArrayList<Articles>();
         // get data to add list
         list = articleService.list();
-        //set status
+        // set status
         StatusResponse status = new StatusResponse(200, "Get All Post successfully.", "Get All Post success!");
         // set result return
         ResultResponse result = new ResultResponse(status, list);
         // return result
         return Response.status(200).entity(result).build();
     }
-    
-    //get all post by user 
+
+    // GET ALL POSTS BY USER
     @Path("/listby/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPostsByUser(@PathParam("id") int userID)
     {
-        //create a list to hold data return
+        // create a list to hold data return
         List<Articles> list = new ArrayList<Articles>();
         // get data to add list
         list = articleService.getAllPostByUser(userID);
-        //set status
-        StatusResponse status = new StatusResponse(200, "Get All Post By User successfully.", "Get Post by user success!");
+        // set status
+        StatusResponse status = new StatusResponse(200, "Get All Post By User successfully.",
+                "Get Post by user success!");
         // set result return
         ResultResponse result = new ResultResponse(status, list);
         // return result

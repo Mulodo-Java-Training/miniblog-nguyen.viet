@@ -3,6 +3,7 @@ package miniblog.controller;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -261,13 +262,18 @@ public class UserController {
     }
 
     // Delete User
-    @Path("/delete")
-    @POST
-    @Produces(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response deleteUser(@FormParam("username") String username)
+    @Path("/delete/{id}")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUser(@PathParam("id") int id)
     {
-        // Get user id by username and delete this user
-        userService.delete(userService.getUsersByUsername(username).getId());
-        return Response.status(200).entity("Delete Susscess").build();
+        // delete user
+        userService.delete(id);
+        //set status
+        StatusResponse status = new StatusResponse(200, "Delete user successfully", "Delete success!");
+        // set result return
+        ResultResponse result = new ResultResponse(status, null);
+        // return result
+        return Response.status(200).entity(result).build();
     }
 }

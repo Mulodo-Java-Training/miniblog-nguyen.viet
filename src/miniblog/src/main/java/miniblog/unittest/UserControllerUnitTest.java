@@ -10,13 +10,17 @@ import javax.ws.rs.core.MediaType;
 import miniblog.constant.URLConstant;
 import miniblog.controller.UserController;
 import miniblog.entity.Users;
+import miniblog.util.ResultResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.Gson;
 
 /**
  * @author NguyenLeQuoc
@@ -28,17 +32,47 @@ public class UserControllerUnitTest {
     @Autowired
     private UserController userController;
     
+    //create user id to check
+    int useID = 0;
+    
     // Create object CommonController to support test
     @Before
     public void setUp() throws Exception
     {
         userController = new UserController();
+        /*ADD USER FOR CHECK METHODS*/
+        // create a request add user from client
+        ClientRequest requestAddUser = new ClientRequest(URLConstant.CREATE_USER);
+        // accept with input type
+        requestAddUser.accept(MediaType.APPLICATION_JSON);
+        // input data
+        String userInput = "{\"username\": \"nguyen.viet\"," + "\"password\": \"123456\","
+                + "\"lastname\": \"one\",\"firstname\": \"test\"," + "\"email\":\"test@yahoo.com\"}";
+        // get data
+        requestAddUser.body(MediaType.APPLICATION_JSON, userInput);
+        // run operation and get respond
+        ClientResponse<ResultResponse> response = requestAddUser.post(ResultResponse.class);
+        /*Get Id of post to delete*/
+        //Create json object
+        Gson gson = new Gson();
+        //Parse result return to ResultResponse object
+        ResultResponse result = gson.fromJson(response.getEntity(String.class), ResultResponse.class);
+        //Parse Data object(json format) of ResultResponse to Users
+        Users user = new ObjectMapper().readValue(gson.toJson(result.getData()), Users.class);
+        //Get id of user just add
+        useID = user.getId();
+        // close environment
+        response.close();
     }
 
     @After
     public void tearDown() throws Exception
     {
         userController = null;
+        /*create a request delete a user account of adding test*/
+        ClientRequest requestDelete = new ClientRequest(URLConstant.DELETE_USER + useID);
+        // run operation and get respond
+        requestDelete.delete(ResultResponse.class);
     }
 
     /**
@@ -52,19 +86,6 @@ public class UserControllerUnitTest {
         // Field required!
         Users u = new Users();
         assertEquals(userController.addUser(u).getStatus(), 1001);
-
-        //Delete user before, because after run this menthod test will have a user created//
-        ClientRequest requestDelete = new ClientRequest(URLConstant.DELETE_USER);
-        // accept with input type
-        requestDelete.accept(MediaType.APPLICATION_FORM_URLENCODED);
-        // input data
-        String usernameInput = "username=testAdd";
-        // get data
-        requestDelete.body(MediaType.APPLICATION_FORM_URLENCODED, usernameInput);
-        // run operation and get respond
-        ClientResponse<String> response2 = requestDelete.post(String.class);
-        // close environment
-        response2.close();
         
         // ///////////////////Add new user/////////////////////////
         // create a request add user from client
@@ -77,18 +98,33 @@ public class UserControllerUnitTest {
         // get data
         requestAddUser.body(MediaType.APPLICATION_JSON, userInput);
         // run operation and get respond
-        ClientResponse<Users> response = requestAddUser.post(Users.class);
+        ClientResponse<ResultResponse> response = requestAddUser.post(ResultResponse.class);
         // check add new user with code 200 is successful!
         assertEquals(response.getStatus(), 200);
+        
+        /*Get Id of post to delete*/
+        //Create json object
+        Gson gson = new Gson();
+        //Parse result return to ResultResponse object
+        ResultResponse result = gson.fromJson(response.getEntity(String.class), ResultResponse.class);
+        //Parse Data object(json format) of ResultResponse to Users
+        Users user = new ObjectMapper().readValue(gson.toJson(result.getData()), Users.class);
+        //Get id of user just add
+        int userID = user.getId();
         // close environment
         response.close();
 
         // //////////////Add user again to check exist/////////////////
         // run operation again and get respond
-        response = requestAddUser.post(Users.class);
+        response = requestAddUser.post(ResultResponse.class);
         // check add new user with code 9002 is login faild!
         assertEquals(response.getStatus(), 9002);
         response.close();
+        
+        /*create a request delete a user account from user just add*/
+        ClientRequest requestDelete = new ClientRequest(URLConstant.DELETE_USER + userID);
+        // run operation and get respond
+        requestDelete.delete(ResultResponse.class);
     }
 
     /**
@@ -108,7 +144,7 @@ public class UserControllerUnitTest {
         // push data
         request.body(MediaType.APPLICATION_FORM_URLENCODED, input);
         // get respone to check
-        ClientResponse<String> response = request.post(String.class);
+        ClientResponse<ResultResponse> response = request.post(ResultResponse.class);
 
         // /////////// check login user success!////////////////
         // return with code 200 is successful
@@ -122,7 +158,7 @@ public class UserControllerUnitTest {
         // push data
         request.body(MediaType.APPLICATION_FORM_URLENCODED, input);
         // get respone to check
-        response = request.post(String.class);
+        response = request.post(ResultResponse.class);
         // return with code 9001 is faild
         assertEquals(response.getStatus(), 9001);
         // close response environment
@@ -148,9 +184,9 @@ public class UserControllerUnitTest {
     public void testGetUserInfor() throws Exception
     {
         // create a request from client
-        ClientRequest request = new ClientRequest(URLConstant.INFOR_USER+"1");
+        ClientRequest request = new ClientRequest(URLConstant.INFOR_USER+useID);
         // get respone to check
-        ClientResponse<String> response = request.get(String.class);
+        ClientResponse<ResultResponse> response = request.get(ResultResponse.class);
         // /////////// get user infor ////////////////
         // return with code 200 is successful
         assertEquals(response.getStatus(), 200);
@@ -171,12 +207,12 @@ public class UserControllerUnitTest {
         // accept with input type
         request.accept("application/json");
         // input data
-        String userInput = "{\"id\": \"1\", " + "\"lastname\": \"nguyen\", " + "\"firstname\": \"viet\", "
+        String userInput = "{\"id\": "+useID+", " + "\"lastname\": \"nguyen\", " + "\"firstname\": \"viet\", "
                 + "\"email\":\"viet@yahoo.com\"}";
         // get data
         request.body("application/json", userInput);
         // run operation and get respond
-        ClientResponse<String> response = request.put(String.class);
+        ClientResponse<ResultResponse> response = request.put(ResultResponse.class);
         // check add new user with code 200 is successful!
         assertEquals(response.getStatus(), 200);
         // close environment
@@ -196,11 +232,11 @@ public class UserControllerUnitTest {
         // accept with input type
         request.accept("application/json");
         // input data
-        String userInput = "{\"id\": \"1\", " + "\"password\":\"123456\"}";
+        String userInput = "{\"id\": "+useID+", " + "\"password\":\"123456\"}";
         // get data
         request.body("application/json", userInput);
         // run operation and get respond
-        ClientResponse<String> response = request.put(String.class);
+        ClientResponse<ResultResponse> response = request.put(ResultResponse.class);
         // check add new user with code 200 is successful!
         assertEquals(response.getStatus(), 200);
         // close environment
@@ -224,10 +260,9 @@ public class UserControllerUnitTest {
         // push data
         request.body(MediaType.APPLICATION_FORM_URLENCODED, input);
         // get respone to check
-        ClientResponse<String> response = request.post(String.class);
+        ClientResponse<ResultResponse> response = request.post(ResultResponse.class);
 
         // /////////// check find users////////////////
-
         if (response.getStatus() == 200)
             // return with code 200 is successful
             assertEquals(response.getStatus(), 200);

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service("ArticleServiceImpl")
 public class ArticleServiceImpl<T extends Articles> implements IArticleService {
 
-    // Create userDAO to operation with database
+    // Create articleDAO to operation with database
     @Autowired
     @Qualifier("ArticleDaoImpl")
     private IArticleDao<Articles> articleDAO;
