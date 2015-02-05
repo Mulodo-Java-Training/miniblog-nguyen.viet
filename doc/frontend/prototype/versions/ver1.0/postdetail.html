@@ -19,12 +19,17 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/dobPicker.min.js"></script>
 <script src="js/editor.js"></script>
+<script type="text/javascript">
+	function myFunction(){
+		$("#myModal").modal('show');
+	};
+</script>
 <title>Post Detail</title>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
-    <div class="navbar-header"> <a class="miniblog-icon" href="#">Mini Blog</a> </div>
+    <div class="navbar-header"> <a class="miniblog-icon" href="home.html">Mini Blog</a> </div>
     <div class="row">
       <div class="col-sm-5 col-sm-offset-1">
         <div id="imaginary_container">
@@ -94,7 +99,7 @@
               <div class="panel-body">
                 <p> Multimedia messaging services providers to "collect a fee every time anyone snaps a photo." </p>
                 <p class="blog-post-meta detail-post">Date: 01/02/2015 12:12:32 by <a href="#">Viet Nguyen</a></p>
-                <a href="#" class="glyphicon glyphicon-pencil"></a>&nbsp;&nbsp; <a href="postdetail.html" class="glyphicon glyphicon-trash"></a>
+                <a class="glyphicon glyphicon-pencil" onclick="myFunction()"></a>&nbsp;&nbsp; <a href="postdetail.html" class="glyphicon glyphicon-trash"></a>
               </div>
             </div>
             <form >
@@ -121,5 +126,22 @@
   <!-- /.col --> 
 </div>
 <!-- /container -->
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Edit Comment</h4>
+            </div>
+            <div class="modal-body">
+                 <textarea class="panel-body" placeholder="Leave your comment....!">Multimedia messaging services providers to "collect a fee every time anyone snaps a photo.</textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
