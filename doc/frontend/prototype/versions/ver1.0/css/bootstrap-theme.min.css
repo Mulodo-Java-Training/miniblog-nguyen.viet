@@ -451,3 +451,6 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe8e8e8', end
 	font-size: 11px;
 	color: #836C6C;
 }
+.panel-body-dob{
+	width:32%;
+}
