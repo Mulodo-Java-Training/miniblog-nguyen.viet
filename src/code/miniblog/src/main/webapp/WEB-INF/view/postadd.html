@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap theme -->
+<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="css/theme.css" rel="stylesheet">
+<link href="css/editor.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/dobPicker.min.js"></script>
+<script src="js/editor.js"></script>
+<script type="text/javascript">
+		$(document).ready( function() {
+            
+         $("#txtEditor").Editor();                    
+         
+    });
+  </script>
+<title>Add Post</title>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header"> <a class="miniblog-icon" href="home.html">Mini Blog</a> </div>
+    <div class="row">
+      <div class="col-sm-5 col-sm-offset-1">
+        <div id="imaginary_container">
+          <form >
+            <div class="input-group stylish-input-group">
+              <input type="text" class="form-control"  placeholder="Username, Lastname, Firstname" >
+              <span class="input-group-addon">
+              <button type="submit"> <span class="glyphicon glyphicon-search"></span> </button>
+              </span> </div>
+          </form>
+        </div>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown"> <a href="" class="dropdown-toggle animate" data-toggle="dropdown">Hi Nguyen Viet<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="useredit.html" class="animate">Profile<span class="pull-right glyphicon glyphicon-user"></span></a></li>
+            <li><a href="welcome.html" class="animate">Logout<span class="pull-right glyphicon glyphicon-off"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  </div>
+</nav>
+<!--End header--> 
+<!-- Container -->
+
+<div class="container">
+<div class="row">
+<h3> New Post </h3>
+<hr>
+<!--Sort column to show--> 
+<!--col 1 is emty-->
+<div class="col-md-2 blog-main"> </div>
+<!--end col 1--> 
+<!--col 2 is show post-->
+<div class="col-md-6 blog-main ">
+  <div class="blog-post">
+    <form method="POST" action="" accept-charset="UTF-8" role="form" class="form-signin">
+        <fieldset>
+          <div class="panel panel-info">
+            <div class="panel-heading">Title</div>
+            <input class=" panel-body" placeholder="Post title" name="title" type="text" required>
+          </div>
+          <div class="panel panel-info">
+            <div class="panel-heading">Description</div>
+            <div id="txtEditor"></div> 
+          </div>
+          <input class="btn btn-lg  btn-primary btn-block " type="submit" value="Post" name="post"/>
+          <br>
+          <a href="home.html">
+          <input class="btn btn-lg btn-warning btn-block" type="cancel" value="Cancel" name="cancel"/>
+          </a> 
+        </fieldset>
+      </form>
+  </div><br>
+</div>
+<!--end col 2 --> 
+<!--col 3-->
+<div class="col-md-3 col-sm-offset-8 blog-sidebar affix">
+    <ul class="nav nav-list bs-docs-sidenav fix-size">
+    <li><a href="postadd.html" class="font-nav-sile">New Post <span class="pull-right glyphicon glyphicon-plus"></span></a></li>
+    <li><a href="#" class="font-nav-sile">My Post <span class="pull-right glyphicon glyphicon-th-list"></a></li>
+    <li><a href="#" class="font-nav-sile">Top Post <span class="pull-right glyphicon glyphicon-list-alt"></a></li>
+    <li><a href="#" class="font-nav-sile">All Post <span class="pull-right glyphicon glyphicon-th"></a></li>
+    </ul>
+</div>
+<!--end col 3 -->
+</div>
+<!-- /.col -->
+</div>
+<div class="container">
+<div class="row">
+	<div class="col-lg-12 nopadding">
+    	<div id="txtEditor"></div> 
+    </div>
+</div>  
+</div>
+</div>
+</div>
+<!-- /container --> 
+</body>
+</html>
