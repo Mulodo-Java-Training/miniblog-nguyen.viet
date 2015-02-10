@@ -49,9 +49,9 @@
 						</div>
 						<input class="btn btn-lg  btn-primary btn-block " type="submit"
 							value="Change" name="change" /> <br> <a
-							href="useredit?id=<%=user_id%>""> <input
-							class="btn btn-lg btn-warning btn-block" type="cancel"
-							value="Cancel" name="cancel" />
+							href="useredit?id=<%=user_id%>"> <input
+							class="btn btn-lg btn-warning btn-block" value="Cancel"
+							name="cancel" />
 						</a>
 					</fieldset>
 				</form>

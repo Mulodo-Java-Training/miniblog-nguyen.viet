@@ -287,6 +287,8 @@ public class UserController {
         // check user login and user infor match
         if (!session.getAttribute("user_id").equals(u.getId()))
         {
+            result = new ResultResponse("You need login first", null, CommonConstant.MESS_FAILD);
+            model.addAttribute("messager", result.toString());
             return "home";
         }
         // get input from user
@@ -336,6 +338,8 @@ public class UserController {
         // check user login or not
         if (session.getAttribute("user_id") == null)
         {
+            result = new ResultResponse("You need login first", null, CommonConstant.MESS_FAILD);
+            model.addAttribute("messager", result.toString());
             return "welcome";
         }
         // get input from user

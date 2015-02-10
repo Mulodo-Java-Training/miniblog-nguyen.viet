@@ -44,12 +44,14 @@
 <div class="container">
   <div class="row">
     <hr>
+    ${messager}
     <!--Sort column to show--> 
     <!--col 1 is emty-->
     <div class="col-md-3 blog-main"> </div>
     <!--end col 1--> 
     <!--col 2 is show post-->
     <div class="col-md-8 blog-main ">
+    
       <div class="blog-post">
         <h4 class="blog-post-title">Post 1</h4>
         <p class="blog-post-meta detail-post">Date: 01/02/2015 11:12:32 by <a href="#">Mark</a></p>

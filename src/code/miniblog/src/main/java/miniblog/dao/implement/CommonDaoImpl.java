@@ -7,6 +7,8 @@ import java.util.List;
 import miniblog.dao.interfaces.ICommonDao;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -34,9 +36,15 @@ public abstract class CommonDaoImpl<T> extends HibernateDaoSupport implements
 	}
 	
 	// Use HibernateDaoSupport to get list data
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public List<T> list() {
-		return getHibernateTemplate().loadAll(entityClass);
+	    DetachedCriteria cr = DetachedCriteria.forClass(entityClass);
+	    //Add expressions or restrictions to your citeria
+	    //And add your ordering
+	    cr.addOrder(Order.desc("id"));
+	    List<T> ls = getHibernateTemplate().findByCriteria(cr);
+		return ls;
 	}
 
 	// Use HibernateDaoSupport to add a date
