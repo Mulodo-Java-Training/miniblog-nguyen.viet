@@ -82,7 +82,7 @@
           <a href="changepass?id=<%=user_id%>">
           <input class="btn btn-lg  btn-primary btn-block " value="Change Password" name="changepass"/>
           </a><br>
-          <a href="useredit?id=<%=user_id%>"">
+          <a href="useredit?id=<%=user_id%>">
           <input class="btn btn-lg btn-warning btn-block"  value="Cancel" name="cancel"/>
           </a> <br>
         </fieldset>
