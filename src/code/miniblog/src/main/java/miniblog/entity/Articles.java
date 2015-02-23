@@ -1,50 +1,32 @@
 package miniblog.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import miniblog.api.CommonAPI;
+import miniblog.constant.CommonConstant;
 import miniblog.util.DateAdapter;
+import miniblog.util.ResultResponse;
 
-@Entity
-@Table(name = "Articles")
-public class Articles implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Column(name = "id")
-    @GeneratedValue
+import org.jboss.resteasy.client.ClientResponse;
+
+@SuppressWarnings("deprecation")
+public class Articles {
     private int id;
-
-    @ManyToOne
-    @JoinColumn(name="users_id", referencedColumnName="id", insertable = true, updatable = true)
-    private Users users_id;
-
-    @Column(name = "title")
+    private int users_id;
+    private Users users;
     private String title;
-
-    @Column(name = "description")
     private String description;
-
-    @Column(name = "status")
     private int status;
-
-    @Column(name = "date_create")
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date date_create;
-
-    @Column(name = "date_modify")
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date date_modify;
 
     public Articles() {
+
         Date date = new Date();
         // set date_create a post
         this.date_create = date;
@@ -60,14 +42,33 @@ public class Articles implements Serializable {
         this.id = id;
     }
 
-    public Users getUsers_id()
+    public int getUsers_id()
     {
-        return users_id;
+        return this.users_id;
     }
 
-    public void setUsers_id(Users users_id)
+    public void setUsers_id(int users_id)
     {
         this.users_id = users_id;
+    }
+
+    public Users getUsers()
+    {
+        // Create API operation
+        CommonAPI api = new CommonAPI();
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.USER_INFOR_URL + getUsers_id(),
+                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, null, CommonConstant.METHOD_GET);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        this.users = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
+        return this.users;
+    }
+
+    public void setUsers(Users users)
+    {
+        this.users = users;
     }
 
     public String getTitle()
@@ -114,5 +115,4 @@ public class Articles implements Serializable {
     {
         this.date_modify = date_modify;
     }
-
 }

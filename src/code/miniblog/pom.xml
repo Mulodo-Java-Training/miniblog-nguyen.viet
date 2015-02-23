@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>miniblog</groupId>
-	<artifactId>MiniBlog</artifactId>
+	<groupId>miniblog-front-end</groupId>
+	<artifactId>MiniBlog-front-end</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>MiniBlog</name>
+	<name>MiniBlog-front-end</name>
 	<url>http://maven.apache.org</url>
 	<!-- JBoss repository for Hibernate -->
 	<repositories>
@@ -31,7 +31,34 @@
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
 		</dependency>
+		<!-- JBoss RESTEasy -->
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>3.0.6.Final</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-spring</artifactId>
+			<version>3.0.6.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson-provider</artifactId>
+			<version>3.0.6.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>3.0.6.Final</version>
+		</dependency>
+		<dependency>
+		   <groupId>org.jboss.resteasy</groupId>
+		    <artifactId>resteasy-jettison-provider</artifactId>
+		    <version>3.0.6.Final</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -225,7 +252,7 @@
 
 	</dependencies>
 	<build>
-		<finalName>miniblog</finalName>
+		<finalName>miniblog-front-end</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

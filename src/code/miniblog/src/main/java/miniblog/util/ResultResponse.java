@@ -1,69 +1,49 @@
 package miniblog.util;
 
-import miniblog.constant.CommonConstant;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlRootElement(name = "Result")
 public class ResultResponse {
-
-    private String text;
-    private String page;
-    private int type;
-
-    public ResultResponse(String text, String page,int type) {
-        this.text = text;
-        this.page = page;
-        this.type = type;
+    
+    @XmlAttribute(name = "meta")
+    private StatusResponse meta;
+    
+    @XmlElement(name = "data")
+    private Object data;
+    
+    public ResultResponse(StatusResponse meta, Object data) {
+        this.meta = meta;
+        this.data = data;
     }
-
+    
     public ResultResponse() {
     }
-
-    public String getText()
-    {
-        return text;
-    }
-
-    public void setText(String text)
-    {
-        this.text = text;
-    }
-
-    public String getPage()
-    {
-        return page;
-    }
-
-    public void setPage(String page)
-    {
-        this.page = page;
-    }
-
     
-    public int getType()
+    public StatusResponse getMeta()
     {
-        return type;
+        return meta;
     }
 
-    public void setType(int type)
+    public void setMeta(StatusResponse meta)
     {
-        this.type = type;
+        this.meta = meta;
     }
 
-    @Override
-    public String toString()
+    public Object getData()
     {
-        if (type == CommonConstant.DIALOG_SUCCESS)
-        {
-            return "<script type='text/javascript'>alert('"+getText()+"');window.location.href = '"+getPage()+"';</script>";
-        } 
-        if (type == CommonConstant.MESS_FAILD)
-        {
-            return "<div class='alert alert-danger' role='alert'>"+getText()+"</div>";
-        }
-        if (type == CommonConstant.MESS_SUCCESS)
-        {
-            return "<div class='alert alert-success' role='alert'>"+getText()+"</div>";
-        }
-        return null;
+        
+        return data;
     }
 
+    public void setData(Object data)
+    {
+        this.data = data;
+    }
+    
+    
 }

@@ -1,49 +1,26 @@
 package miniblog.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import miniblog.util.DateAdapter;
 
-@Entity
-@Table(name = "Users")
-public class Users implements Serializable {
-    private static final long serialVersionUID = 2L;
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue
+public class Users {
     private int id;
-
-    @Column(name = "username")
     private String username;
 
-    @Column(name = "password")
-    @XmlElement(name = "password")
     private String password;
 
-    @Column(name = "firstname")
     private String firstname;
 
-    @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "birthday", nullable = true)
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date birthday;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "status")
     private int status;
 
     public Users() {
@@ -109,13 +86,12 @@ public class Users implements Serializable {
     {
         this.lastname = lastname;
     }
-    @XmlJavaTypeAdapter(DateAdapter.class)
+
     public Date getBirthday()
     {
         return birthday;
     }
 
-    
     public void setBirthday(Date birthday)
     {
         this.birthday = birthday;

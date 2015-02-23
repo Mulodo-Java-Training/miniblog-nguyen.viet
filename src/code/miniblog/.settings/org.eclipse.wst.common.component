@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-	<wb-module deploy-name="miniblog">
+	<wb-module deploy-name="miniblog-front-end">
 		<property name="java-output-path" value="/target/classes"/>
-        <property name="context-root" value="miniblog"/>
+        <property name="context-root" value="miniblog-front-end"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>
 		<wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>

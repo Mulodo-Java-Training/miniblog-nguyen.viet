@@ -5,6 +5,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -39,7 +40,7 @@
             <div class="panel-heading">Lastname</div>
             <input class="panel-body" placeholder="Lastname" name="lastname" type="text" value="${user.lastname}" required>
           </div>
-           <c:set var="birthday" value="${user.birthday}"/>
+           <fmt:formatDate var="birthday" pattern="yyyy-MM-dd" value="${user.birthday}" />
 			<c:set var="day" value="${fn:substring(birthday, 8, 10)}" />
 			<c:set var="month" value="${fn:substring(birthday, 5, 7)}" />
 			<c:set var="year" value="${fn:substring(birthday, 0, 4)}" />
@@ -47,13 +48,34 @@
             <div class="panel-heading">Birthday</div>
             <div class="panel-body ">
             <select id="dobday" class=" panel-body panel-body-dob" name="day">
-            <option value="${day}">${day}</option>
+	            <c:choose>
+				    <c:when test="${empty day}">
+				        <option value="null">Day</option>
+				    </c:when>
+				    <c:otherwise>
+				        <option value="${day}">${day}</option>
+				    </c:otherwise>
+				</c:choose>
             </select>
             <select id="dobmonth" class=" panel-body panel-body-dob" name="month">
-            <option value="${month}">${month}</option>
+            	<c:choose>
+				    <c:when test="${empty day}">
+				        <option value="null">Month</option>
+				    </c:when>
+				    <c:otherwise>
+				        <option value="${month}">${month}</option>
+				    </c:otherwise>
+				</c:choose>
             </select>
             <select id="dobyear" class=" panel-body panel-body-dob" name="year">
-            <option value="${year}">${year}</option>
+            	<c:choose>
+				    <c:when test="${empty day}">
+				        <option value="null">Year</option>
+				    </c:when>
+				    <c:otherwise>
+				        <option value="${year}">${year}</option>
+				    </c:otherwise>
+				</c:choose>
             </select>
             </div>
            

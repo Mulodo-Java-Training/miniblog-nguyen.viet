@@ -1,77 +1,122 @@
 package miniblog.service.implement;
 
-import java.util.List;
+import javax.ws.rs.core.MediaType;
 
-import miniblog.dao.interfaces.IUserDao;
+import miniblog.api.CommonAPI;
+import miniblog.constant.CommonConstant;
 import miniblog.entity.Users;
 import miniblog.service.interfaces.IUserService;
+import miniblog.util.ResultResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.jboss.resteasy.client.ClientResponse;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+@SuppressWarnings("deprecation")
 @Service("UserServiceImpl")
 public class UserServiceImpl<T extends Users> implements IUserService {
 
-    // Create userDAO to operation with database
-    @Autowired
-    @Qualifier("UserDaoImpl")
-    private IUserDao<Users> userDAO;
+    // create API Return
+    private CommonAPI api;
 
-    public void setUserDAO(IUserDao<Users> user)
-    {
-        this.userDAO = user;
-    }
-
-    // get user by username
-    @Override
-    public Users getUsersByUsername(String username)
-    {
-        return this.userDAO.getUsersByUsername(username);
+    public UserServiceImpl() {
+        this.api = new CommonAPI();
     }
 
     // get user by username and password
     @Override
-    public Users getUserByIdPassword(String username, String password)
+    public ResultResponse getUserByIdPassword(String username, String password)
     {
-        return this.userDAO.getUserByIdPassword(username, password);
+        String input = "username=" + username + "&password=" + password;
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.USER_LOGIN_URL, MediaType.APPLICATION_JSON,
+                MediaType.APPLICATION_FORM_URLENCODED, input, CommonConstant.METHOD_POST);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
     // get user by name
     @Override
-    public List<Users> getUsersByName(String name)
+    public ResultResponse getUsersByName(String name)
     {
-        return this.userDAO.getUsersByName(name);
+        String input = "name=" + name;
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.USER_SEARCH_URL, MediaType.APPLICATION_JSON,
+                MediaType.APPLICATION_FORM_URLENCODED, input, CommonConstant.METHOD_POST);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
     @Override
-    public List<Users> list()
+    public ResultResponse list()
     {
-        return this.userDAO.list();
+        return null;
     }
 
     @Override
-    public Users getById(int id)
+    public ResultResponse getById(int id)
     {
-        return this.userDAO.get(id);
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.USER_INFOR_URL+id, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,null,
+                CommonConstant.METHOD_GET);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
     @Override
-    public boolean add(Users user)
+    public ResultResponse add(Users user)
     {
-        return this.userDAO.save(user);
+        // create object to parse to json format
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.USER_CREATE_URL,
+                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, gson.toJson(user), CommonConstant.METHOD_POST);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
     @Override
-    public boolean delete(int id)
+    public ResultResponse delete(int id)
     {
-        return this.userDAO.delete(id);
+        return null;
     }
 
     @Override
-    public boolean update(Users user)
+    public ResultResponse update(Users user)
+    {   
+        // create object to parse to json format
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.USER_UPDATE_URL, MediaType.APPLICATION_JSON,
+                MediaType.APPLICATION_JSON, gson.toJson(user), CommonConstant.METHOD_PUT);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
+    }
+
+    @Override
+    public ResultResponse changePassword(Users user)
     {
-        return this.userDAO.update(user);
+        // create object to parse to json format
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.USER_CHANGEPASS_URL, MediaType.APPLICATION_JSON,
+                MediaType.APPLICATION_JSON, gson.toJson(user), CommonConstant.METHOD_PUT);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
 }

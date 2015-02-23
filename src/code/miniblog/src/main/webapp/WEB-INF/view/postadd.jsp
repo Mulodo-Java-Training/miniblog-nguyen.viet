@@ -34,7 +34,7 @@
 			<!--end col 1-->
 			<!--col 2 is show post-->
 			<div class="col-md-6 blog-main ">
-			${messager}
+				${messager}
 				<div class="blog-post">
 					<form method="POST" action="postadd" accept-charset="UTF-8"
 						role="form" class="form-signin" name="article">
@@ -46,13 +46,13 @@
 							</div>
 							<div class="panel panel-info">
 								<div class="panel-heading">Description</div>
-								<textarea id="post-description" name="description" placeholder="Type description here..."></textarea>
+								<textarea id="post-description" name="description"
+									placeholder="Type description here..."></textarea>
 							</div>
 							<input class="btn btn-lg  btn-primary btn-block " type="submit"
 								value="Post" name="post" /> <br> 
-								<a href="home">
-								<input class="btn btn-lg btn-warning btn-block" type="cancel"
-								value="Cancel" name="cancel" />
+								<a href="home"> 
+								<input	class="btn btn-lg btn-warning btn-block" value="Cancel" name="cancel" />
 								</a>
 						</fieldset>
 					</form>
@@ -63,11 +63,12 @@
 			<!--col 3-->
 			<div class="col-md-3 col-sm-offset-8 blog-sidebar affix">
 				<ul class="nav nav-list bs-docs-sidenav fix-size">
-					<li><a href="postadd" class="font-nav-sile">New Post
-							<span class="pull-right glyphicon glyphicon-plus"></span>
+					<li><a href="post.add" class="font-nav-sile">New Post <span
+							class="pull-right glyphicon glyphicon-plus"></span>
 					</a></li>
-					<li><a href="post.user?id=<%=user_id%>" class="font-nav-sile">My Post <span
-							class="pull-right glyphicon glyphicon-th-list"></span></a></li>
+					<li><a href="post.user?id=<%=user_id%>" class="font-nav-sile">My
+							Post <span class="pull-right glyphicon glyphicon-th-list"></span>
+					</a></li>
 					<li><a href="#" class="font-nav-sile">Top Post <span
 							class="pull-right glyphicon glyphicon-list-alt"></span></a></li>
 					<li><a href="post.list" class="font-nav-sile">All Post <span
@@ -77,15 +78,6 @@
 			<!--end col 3 -->
 		</div>
 		<!-- /.col -->
-	</div>
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12 nopadding">
-				<div id="txtEditor"></div>
-			</div>
-		</div>
-	</div>
-	</div>
 	</div>
 	<!-- /container -->
 </body>
