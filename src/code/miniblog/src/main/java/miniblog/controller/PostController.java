@@ -1,6 +1,7 @@
 package miniblog.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -147,7 +148,8 @@ public class PostController {
         if (apiReturn.getMeta().getCode() == 200)
         {
             // return if true
-            result = new ResultReturn(apiReturn.getMeta().getMessage(), "home", CommonConstant.DIALOG_SUCCESS);
+            Articles post = (Articles) api.parseData(apiReturn, CommonConstant.TYPE_POST);
+            result = new ResultReturn(apiReturn.getMeta().getMessage(), "post.detail?id="+post.getId(), CommonConstant.DIALOG_SUCCESS);
             model.addAttribute("messager", result.toString());
             return "postadd";
         } else
@@ -333,6 +335,32 @@ public class PostController {
         // set list post of user to return
         model.addAttribute("postList", list);
         // set status
+        return "home";
+    }
+    
+    // LIST OF TOP POST
+    @RequestMapping(value = "/post.top", method = RequestMethod.GET)
+    public String getTopPosts( ModelMap model,HttpServletRequest request)
+    {
+     // create session to check
+        HttpSession session = request.getSession(true);
+        // create messager to return
+        ResultReturn result = new ResultReturn();
+        // check user login or not
+        if (session.getAttribute("user_id") == null)
+        {
+            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
+            model.addAttribute("messager", result.toString());
+            return "welcome";
+        }
+        // get return from api
+        ResultResponse apiReturn = articleService.list();
+        // parse data to add list
+        @SuppressWarnings("unchecked")
+        List<Articles> list = (List<Articles>) api.parseData(apiReturn, CommonConstant.TYPE_POST_LIST);
+        Collections.reverse(list);
+        model.addAttribute("postList", list);
+        // return
         return "home";
     }
 }

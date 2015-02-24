@@ -27,8 +27,6 @@ public class Comments {
     private Date date_modify;
 
     public Comments() {
-        Date date = new Date();
-        this.date_create = date;
     }
 
     public int getId()

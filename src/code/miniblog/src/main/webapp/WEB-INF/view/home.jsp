@@ -5,6 +5,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -63,7 +64,10 @@
 							<a href="post.detail?id=${p.id}">${p.title}</a>
 						</h4>
 						<p class="blog-post-meta detail-post">
-							Date create: ${p.date_create} by <a href="post.user?id=${p.users.id}">${p.users.username}</a>
+							<fmt:timeZone value="GMT-0">
+							Date create: <fmt:formatDate pattern="yyyy/MM/dd HH:mm:ss" value="${p.date_create}"/> 
+							by <a href="post.user?id=${p.users.id}">${p.users.username}</a>
+							</fmt:timeZone>
 						</p>
 						<p class="box-description">${p.description}</p>
 					</div>
@@ -73,20 +77,7 @@
 			</div>
 			<!--end col 2 -->
 			<!--col 3-->
-			<div class="col-md-3 col-sm-offset-8 blog-sidebar affix">
-				<ul class="nav nav-list bs-docs-sidenav fix-size">
-					<li><a href="post.add" class="font-nav-sile">New Post <span
-							class="pull-right glyphicon glyphicon-plus"></span>
-					</a></li>
-					<li><a href="post.user?id=<%=user_id%>" class="font-nav-sile">My
-							Post <span class="pull-right glyphicon glyphicon-th-list"></span>
-					</a></li>
-					<li><a href="#" class="font-nav-sile">Top Post <span
-							class="pull-right glyphicon glyphicon-list-alt"></span></a></li>
-					<li><a href="post.list" class="font-nav-sile">All Post <span
-							class="pull-right glyphicon glyphicon-th"></span></a></li>
-				</ul>
-			</div>
+			<%@include file="leftbar.jsp"%>
 			<!--end col 3 -->
 		</div>
 		<!-- /.col -->
