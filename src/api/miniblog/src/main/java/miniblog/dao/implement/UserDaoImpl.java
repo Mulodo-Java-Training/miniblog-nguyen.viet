@@ -25,9 +25,7 @@ public class UserDaoImpl<T extends Users> extends CommonDaoImpl<Users> implement
         // set name format to find in database
         String nameSearch = "%" + name + "%";
         // create session
-        Session s = sessionFactory.getCurrentSession();
-        // begin transaction
-        s.beginTransaction();
+        Session s = sessionFactory.openSession();
         // set user list when data return
         List<Users> u = s
                 .createSQLQuery(
@@ -44,11 +42,10 @@ public class UserDaoImpl<T extends Users> extends CommonDaoImpl<Users> implement
     public Users getUsersByUsername(String username)
     {
         // create session
-        Session s = sessionFactory.getCurrentSession();
-        // begin transaction
-        s.beginTransaction();
+        Session s = sessionFactory.openSession();
         // set user object
         Users u = (Users) s.createCriteria(Users.class).add(Restrictions.like("username", username)).uniqueResult();
+        s.close();
         return u;
     }
 
@@ -56,12 +53,11 @@ public class UserDaoImpl<T extends Users> extends CommonDaoImpl<Users> implement
     public Users getUserByIdPassword(String username, String password)
     {
         // create session
-        Session s = sessionFactory.getCurrentSession();
-        // begin transaction
-        s.beginTransaction();
+        Session s = sessionFactory.openSession();
         // set user object
         Users u = (Users) s.createCriteria(Users.class).add(Restrictions.like("username", username))
                 .add(Restrictions.like("password", password)).uniqueResult();
+        s.close();
         return u;
     }
 }

@@ -100,6 +100,7 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response login(@FormParam("username") String username, @FormParam("password") String password)
     {
+        
         // Check client login with username and password
         if (username == null || username.isEmpty() || password == null || password.isEmpty())
         {
