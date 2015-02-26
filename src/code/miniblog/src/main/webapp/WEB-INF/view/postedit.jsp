@@ -8,20 +8,25 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
-<title>Home</title>
-</head>
+<script src="<c:url value='/resources/js/common.js'/>"></script>
 
+<title>Post Edit</title>
+</head>
 <body>
 	<!-- Header -->
 	<%@include file="header.jsp"%>
 	<!--End header-->
 	<!-- Container -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#post-description").cleditor();
+		});
+	</script>
 	<div class="container">
 		<div class="row">
+			<h3>New Post</h3>
 			<hr>
 			<!--Sort column to show-->
 			<!--col 1 is emty-->
@@ -30,52 +35,37 @@
 			<!--col 2 is show post-->
 			<div class="col-md-6 blog-main ">
 				${messager}
-				<c:forEach var="u" items="${userList}">
-					<c:set var="birthday" value="${u.birthday}" />
-					<c:set var="dobday" value="${fn:substring(birthday, 0, 10)}" />
-					<table class="table table-bordered">
-						<thead class="panel panel-info ">
-							<tr class="panel panel-primary panel-heading">
-								<th colspan="3">User infor</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td style="width: 60px"><strong>Username</strong></td>
-								<td colspan="2"><a href="post.user?id=${u.id}">${u.username}</a></td>
-							</tr>
-							<tr>
-								<td><strong>Fullname</strong></td>
-								<td>${u.firstname}${u.lastname}</td>
-							</tr>
-							<tr>
-								<td><strong>Birthday</strong></td>
-								<td>${dobday}</td>
-							</tr>
-						</tbody>
-					</table>
-				</c:forEach>
+				<div class="blog-post">
+					<form method="POST" action="post.edit" accept-charset="UTF-8"
+						role="form" class="form-signin" name="article">
+						<fieldset>
+						<input name="id" type="text" value="${post.id}" required hidden="true">
+							<div class="panel panel-info">
+								<div class="panel-heading">Title</div>
+								<input class=" panel-body" placeholder="Post title" name="title"
+									type="text" required value="${post.title}">
+							</div>
+							<div class="panel panel-info">
+								<div class="panel-heading">Description</div>
+								<textarea id="post-description" name="description"
+									placeholder="Type description here...">${post.description}</textarea>
+							</div>
+							<input class="btn btn-lg  btn-primary btn-block " type="submit"
+								value="EDIT/UPDATE" name="post" /> <br> 
+								<a href="post.detail?id=${post.id}"> 
+									<input
+									class="btn btn-lg btn-warning btn-block" value="Cancel" name="cancel" />
+								</a>
+						</fieldset>
+					</form>
+				</div>
 				<br>
-				<!-- /.blog-post -->
-				<c:forEach var="p" items="${postList}">
-					<div class="blog-post">
-						<h4 class="blog-post-title">
-							<a href="post.detail?id=${p.id}">${p.title}</a>
-						</h4>
-						<p class="blog-post-meta detail-post">
-							Date create: ${p.date_create} by <a href="post.user?id=${p.users.id}">${p.users.username}</a>
-						</p>
-						<p class="box-description">${p.description}</p>
-					</div>
-					<br>
-				</c:forEach>
-				<!-- /.blog-post -->
 			</div>
 			<!--end col 2 -->
 			<!--col 3-->
 			<div class="col-md-3 col-sm-offset-8 blog-sidebar affix">
 				<ul class="nav nav-list bs-docs-sidenav fix-size">
-					<li><a href="post.add" class="font-nav-sile">New Post <span
+					<li><a href="postadd" class="font-nav-sile">New Post <span
 							class="pull-right glyphicon glyphicon-plus"></span>
 					</a></li>
 					<li><a href="post.user?id=<%=user_id%>" class="font-nav-sile">My

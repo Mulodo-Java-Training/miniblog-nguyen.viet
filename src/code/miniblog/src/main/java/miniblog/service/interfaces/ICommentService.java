@@ -1,14 +1,13 @@
 package miniblog.service.interfaces;
 
-import java.util.List;
-
 import miniblog.entity.Comments;
+import miniblog.util.ResultResponse;
 
 public interface ICommentService extends ICommonService<Comments> {
     //get list comments by user
-    public List<Comments> listByUser(int user_id);
+    public ResultResponse listByUser(int user_id);
     //get list comments by article
-    public List<Comments> listByPost(int article_id);
+    public ResultResponse listByPost(int article_id);
 }
 
 

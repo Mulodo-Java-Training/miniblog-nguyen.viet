@@ -8,11 +8,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import miniblog.api.CommonAPI;
 import miniblog.constant.CommonConstant;
+import miniblog.entity.Articles;
 import miniblog.entity.Users;
+import miniblog.service.interfaces.IArticleService;
 import miniblog.service.interfaces.IUserService;
-import miniblog.util.Commons;
 import miniblog.util.ResultResponse;
+import miniblog.util.ResultReturn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,14 +33,19 @@ public class UserController {
     @Qualifier("UserServiceImpl")
     private IUserService userService;
 
-    // Create Common controller
-    private Commons commonController;
+    // Create Article Service
+    @Autowired
+    @Qualifier("ArticleServiceImpl")
+    private IArticleService articleService;
+
+    // Create API operation
+    CommonAPI api;
 
     // Messager
     String messager;
 
     public UserController() {
-        this.commonController = new Commons();
+        this.api = new CommonAPI();
     }
 
     // access Register page
@@ -52,7 +60,7 @@ public class UserController {
     public String addUser(@ModelAttribute("user") Users user, ModelMap model, HttpServletRequest request)
             throws ParseException
     {
-        ResultResponse result = new ResultResponse();
+        ResultReturn result = new ResultReturn();
         // Check fileds required
         if (user.getFirstname() == null || !user.getFirstname().matches(".*\\w.*") || user.getLastname() == null
                 || !user.getLastname().matches(".*\\w.*") || user.getEmail() == null
@@ -60,7 +68,7 @@ public class UserController {
                 || !user.getUsername().matches(".*\\w.*") || user.getPassword() == null
                 || !user.getPassword().matches(".*\\w.*"))
         {
-            result = new ResultResponse("Fields are required!", null, CommonConstant.MESS_FAILD);
+            result = new ResultReturn("Fields are required!", null, CommonConstant.MESS_FAILD);
             model.addAttribute("messager", result.toString());
             return "register";
         }
@@ -68,8 +76,8 @@ public class UserController {
         String day = request.getParameter("day");
         String month = request.getParameter("month");
         String year = request.getParameter("year");
-        String birthday = day + "/" + month + "/" + year;
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
+        String birthday = year + "-" + month + "-" + day;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         // accept if user not input birthday
         if (birthday.contains("null"))
         {
@@ -78,37 +86,22 @@ public class UserController {
         // accept if user input birthday
         else
         {
-            // parse day
-            Date date = (Date) formatter.parse(birthday);
+            Date date = new Date();
+            date = formatter.parse(birthday);
             user.setBirthday(date);
         }
-        // create user
-        boolean flat = false;
-        // get password client input
-        String newpass = user.getPassword();
-        // convert password to MD5 before input to database
-        user.setPassword(commonController.MD5(newpass));
-        // check add new user to database success or not(exits or not)
-        try
-        {
-            // add user to database
-            flat = userService.add(user);
-        } catch (Exception e)
-        {
-            // if add faild
-            flat = false;
-        }
-        // check create success or not
-        if (flat == true)
+        ResultResponse apiReturn = userService.add(user);
+        // check success or not
+        if (apiReturn.getMeta().getCode() == 200)
         {
             // return if true
-            result = new ResultResponse("Register successful!", "login", CommonConstant.DIALOG_SUCCESS);
+            result = new ResultReturn(apiReturn.getMeta().getMessage(), "login", CommonConstant.DIALOG_SUCCESS);
             model.addAttribute("messager", result.toString());
             return "register";
         } else
         {
             // return if wrong
-            result = new ResultResponse("Register faild because username exist!", "", CommonConstant.MESS_FAILD);
+            result = new ResultReturn(apiReturn.getMeta().getMessage(), "", CommonConstant.MESS_FAILD);
             model.addAttribute("messager", result.toString());
             return "register";
         }
@@ -128,30 +121,29 @@ public class UserController {
     {
         // create session to save user infor
         HttpSession session = request.getSession(true);
-        ResultResponse result = new ResultResponse();
-        // Check client login with username and password
-        if (username == null || username.isEmpty() || password == null || password.isEmpty())
-        {
-            result = new ResultResponse("Fields are required!", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
-        // Convert password to MD5 to compile with database
-        String newpass = commonController.MD5(password);
+        ResultReturn result = new ResultReturn();
         // Get User from database
-        Users user = userService.getUserByIdPassword(username, newpass);
+        ResultResponse apiReturn = userService.getUserByIdPassword(username, password);
         // check get success or not
-        if (user != null)
+        if (apiReturn.getMeta().getCode() == 200)
         {
+            Users user = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
+            // store user infor
             session.setAttribute("user_id", user.getId());
             session.setAttribute("username", user.getUsername());
             session.setAttribute("fullname", user.getLastname() + " " + user.getFirstname());
             // return if login success!
+            // create a list to hold data return
+            apiReturn = articleService.list();
+            // parse data to add list
+            @SuppressWarnings("unchecked")
+            List<Articles> list = (List<Articles>) api.parseData(apiReturn, CommonConstant.TYPE_POST_LIST);
+            model.addAttribute("postList", list);
             return "home";
         } else
         {
             // return message if login faild
-            result = new ResultResponse("Login faild! Wrong username or password", null, CommonConstant.MESS_FAILD);
+            result = new ResultReturn(apiReturn.getMeta().getMessage(), null, CommonConstant.MESS_FAILD);
             model.addAttribute("messager", result.toString());
             return "login";
         }
@@ -180,8 +172,10 @@ public class UserController {
             // check user infor match with current user login
             if (session.getAttribute("user_id").equals(id))
             {
+                ResultResponse apiReturn = userService.getById(id);
+                Users user = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
                 // get user infor
-                model.addAttribute("user", userService.getById(id));
+                model.addAttribute("user", user);
                 return "useredit";
             } else
             {
@@ -196,57 +190,56 @@ public class UserController {
     // update user
     @RequestMapping(value = "/useredit", method = RequestMethod.POST)
     public String editUser(@ModelAttribute("user") Users u, ModelMap model, HttpServletRequest request)
+            throws ParseException
     {
         // create session to check
         HttpSession session = request.getSession(true);
+        // create messager to return
+        ResultReturn result = new ResultReturn();
         // check user update and user infor match
         if (!session.getAttribute("user_id").equals(u.getId()))
         {
-            return "home";
-        }
-        // create messager to return
-        ResultResponse result = new ResultResponse();
-        if (u.getFirstname() == null || !u.getFirstname().matches(".*\\w.*") || u.getLastname() == null
-                || !u.getLastname().matches(".*\\w.*") || u.getEmail() == null || !u.getEmail().matches(".*\\w.*"))
-        {
-            // return if user edit with wrong data
-            result = new ResultResponse("Fields are required!", null, CommonConstant.MESS_FAILD);
+            result = new ResultReturn("You are not alow", null, CommonConstant.MESS_SUCCESS);
             model.addAttribute("messager", result.toString());
-            return "useredit";
-        }
-        // get all user infor
-        Users user = userService.getById(u.getId());
-        if (user == null)
-        {
-            // return home if user not exist!
             return "home";
         }
+        // get all user infor default
+        ResultResponse apiReturn = userService.getById(u.getId());
+        Users userDefault = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
         // Check if user input birthday and it have true or not
         String day = request.getParameter("day");
         String month = request.getParameter("month");
         String year = request.getParameter("year");
-        String birthday = year + "/" + month + "/" + day;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        Date date;
-        try
+        String birthday = year + "-" + month + "-" + day;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        // accept if user not input birthday
+        if (birthday.contains("null"))
         {
-            date = formatter.parse(birthday);
-        } catch (ParseException e)
-        {
-            date = null;
+            u.setBirthday(null);
         }
-        // set new infor for user
-        user.setBirthday(date);
-        user.setFirstname(u.getFirstname());
-        user.setLastname(u.getLastname());
-        user.setEmail(u.getEmail());
+        // accept if user input birthday
+        else
+        {
+            Date date = new Date();
+            date = formatter.parse(birthday);
+            u.setBirthday(date);
+        }
         // update user infor
-        userService.update(user);
+        ResultResponse apiUpdateReturn = userService.update(u);
+        Users userUpdate = (Users) api.parseData(apiUpdateReturn, CommonConstant.TYPE_USER);
         // return result
-        result = new ResultResponse("Edit your information successful!", null, CommonConstant.MESS_SUCCESS);
+        if (userUpdate == null)
+        {
+            // return home if user not exist!
+            result = new ResultReturn(apiUpdateReturn.getMeta().getMessage(), null, CommonConstant.MESS_SUCCESS);
+            model.addAttribute("messager", result.toString());
+            model.addAttribute("user", userDefault);
+            return "useredit";
+        }
+        result = new ResultReturn(apiUpdateReturn.getMeta().getMessage(), null, CommonConstant.MESS_SUCCESS);
         model.addAttribute("messager", result.toString());
         // get new infor of user
-        model.addAttribute("user", userService.getById(u.getId()));
+        model.addAttribute("user", userUpdate);
         return "useredit";
     }
 
@@ -263,8 +256,10 @@ public class UserController {
             // check user infor match with current user login
             if (session.getAttribute("user_id").equals(id))
             {
-                // get user infor
-                model.addAttribute("user", userService.getById(id));
+                // get infor user default
+                ResultResponse apiReturn = userService.getById(id);
+                Users userDefault = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
+                model.addAttribute("user", userDefault);
                 return "changepass";
             } else
             {
@@ -283,25 +278,24 @@ public class UserController {
         // create session to check
         HttpSession session = request.getSession(true);
         // create messager to return
-        ResultResponse result = new ResultResponse();
+        ResultReturn result = new ResultReturn();
         // check user login and user infor match
         if (!session.getAttribute("user_id").equals(u.getId()))
         {
-            result = new ResultResponse("You need login first", null, CommonConstant.MESS_FAILD);
+            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
             model.addAttribute("messager", result.toString());
             return "home";
         }
         // get input from user
         String oldPassword = request.getParameter("old_password");
         String newPassword = request.getParameter("new_password");
-        // Convert password to MD5 to compile with database
-        String convertPass = commonController.MD5(oldPassword);
         // get user form username and old password
-        Users user = userService.getUserByIdPassword(u.getUsername(), convertPass);
+        ResultResponse apiReturn = userService.getUserByIdPassword(u.getUsername(), oldPassword);
+        Users user = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
         if (user == null)
         {
             // return if user input wrong old password
-            result = new ResultResponse("Wrong old password!", null, CommonConstant.MESS_FAILD);
+            result = new ResultReturn("Wrong old password!", null, CommonConstant.MESS_FAILD);
             model.addAttribute("messager", result.toString());
             return "changepass";
         }
@@ -309,21 +303,21 @@ public class UserController {
         if (newPassword == null || !newPassword.matches(".*\\w.*"))
         {
             // return if user edit with wrong data
-            result = new ResultResponse("Fields are required!", null, CommonConstant.MESS_FAILD);
+            result = new ResultReturn("Fields are required!", null, CommonConstant.MESS_FAILD);
             model.addAttribute("messager", result.toString());
             return "changepass";
         }
-        String convertNewPass = commonController.MD5(newPassword);
         // set new pass for user
-        user.setPassword(convertNewPass);
-
+        user.setPassword(newPassword);
+        System.out.println(user.getPassword());
         // update new password
-        userService.update(user);
+        ResultResponse apiChangepass = userService.changePassword(user);
         // return result
-        result = new ResultResponse("Change password successful!", null, CommonConstant.MESS_SUCCESS);
+        result = new ResultReturn(apiChangepass.getMeta().getMessage(), null, CommonConstant.MESS_SUCCESS);
         model.addAttribute("messager", result.toString());
         // get new infor of user
-        model.addAttribute("user", userService.getById(u.getId()));
+        Users userNew = (Users) api.parseData(apiChangepass, CommonConstant.TYPE_USER);
+        model.addAttribute("user", userNew);
         return "changepass";
     }
 
@@ -334,11 +328,11 @@ public class UserController {
         // create session to check
         HttpSession session = request.getSession(true);
         // create messager to return
-        ResultResponse result = new ResultResponse();
+        ResultReturn result = new ResultReturn();
         // check user login or not
         if (session.getAttribute("user_id") == null)
         {
-            result = new ResultResponse("You need login first", null, CommonConstant.MESS_FAILD);
+            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
             model.addAttribute("messager", result.toString());
             return "welcome";
         }
@@ -352,11 +346,13 @@ public class UserController {
             return "home";
         }
         // get user have the same name with client input
-        List<Users> users = userService.getUsersByName(nameSearch);
+        ResultResponse apiReturn = userService.getUsersByName(nameInput);
+        @SuppressWarnings("unchecked")
+        List<Users> users = (List<Users>) api.parseData(apiReturn, CommonConstant.TYPE_USER_LIST);
         // check have or not user in database match name searching
-        if (users.isEmpty())
+        if (users.isEmpty() || users == null)
         {
-            result = new ResultResponse("Not have any exist!", null, CommonConstant.MESS_SUCCESS);
+            result = new ResultReturn("Not have any exist!", null, CommonConstant.MESS_SUCCESS);
         }
         model.addAttribute("messager", result.toString());
         // get new infor of user

@@ -1,68 +1,104 @@
 package miniblog.service.implement;
 
-import java.util.List;
+import javax.ws.rs.core.MediaType;
 
-import miniblog.dao.interfaces.ICommentDao;
+import miniblog.api.CommonAPI;
+import miniblog.constant.CommonConstant;
 import miniblog.entity.Comments;
 import miniblog.service.interfaces.ICommentService;
+import miniblog.util.ResultResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.jboss.resteasy.client.ClientResponse;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+@SuppressWarnings("deprecation")
 @Service("CommentServiceImpl")
 public class CommentServiceImpl<T extends Comments> implements ICommentService {
 
-    // Create commentDAO to operation with database
-    @Autowired
-    @Qualifier("CommentDaoImpl")
-    private ICommentDao<Comments> commentDAO;
+    
+    // create API Return
+    private CommonAPI api;
 
-    public void setCommentDao(ICommentDao<Comments> commentDAO)
-    {
-        this.commentDAO = commentDAO;
+    public CommentServiceImpl() {
+        this.api = new CommonAPI();
     }
 
     @Override
-    public List<Comments> list()
+    public ResultResponse list()
     {
-        return this.commentDAO.list();
+        return null;
     }
 
     @Override
-    public Comments getById(int id)
+    public ResultResponse getById(int id)
     {
-        return this.commentDAO.get(id);
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.COMMENT_BY_ID_URL + id,
+                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, null, CommonConstant.METHOD_GET);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
     @Override
-    public boolean add(Comments obj)
+    public ResultResponse add(Comments comment)
     {
-        return this.commentDAO.save(obj);
+        // create object to parse to json format
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.COMMENT_ADD_URL, MediaType.APPLICATION_JSON,
+                MediaType.APPLICATION_JSON, gson.toJson(comment), CommonConstant.METHOD_POST);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
     @Override
-    public boolean delete(int id)
+    public ResultResponse delete(int id)
     {
-        return this.commentDAO.delete(id);
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.COMMENT_DELETE_URL + id,
+                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, null, CommonConstant.METHOD_DELETE);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
     @Override
-    public boolean update(Comments obj)
+    public ResultResponse update(Comments comment)
     {
-        return this.commentDAO.update(obj);
+        // create object to parse to json format
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.COMMENT_EDIT_URL, MediaType.APPLICATION_JSON,
+                MediaType.APPLICATION_JSON, gson.toJson(comment), CommonConstant.METHOD_PUT);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
     @Override
-    public List<Comments> listByUser(int user_id)
+    public ResultResponse listByUser(int user_id)
     {
-        return this.commentDAO.listByUser(user_id);
+        return null;
     }
 
     @Override
-    public List<Comments> listByPost(int article_id)
+    public ResultResponse listByPost(int article_id)
     {
-        return this.commentDAO.listByPost(article_id);
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.COMMENT_POST_URL+article_id,
+                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, null, CommonConstant.METHOD_GET);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        return apiReturn;
     }
 
 }

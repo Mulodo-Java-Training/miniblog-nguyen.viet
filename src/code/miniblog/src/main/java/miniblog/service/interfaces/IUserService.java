@@ -1,14 +1,14 @@
 package miniblog.service.interfaces;
 
-import java.util.List;
-
 import miniblog.entity.Users;
+import miniblog.util.ResultResponse;
 
 public interface IUserService  extends ICommonService<Users>{
     //get user list by name
-    public List<Users> getUsersByName(String name);
-    //get user by username
-	public Users getUsersByUsername(String username);
+    public ResultResponse getUsersByName(String name);
 	//get user by username and password
-	public Users getUserByIdPassword(String username, String password);
+	public ResultResponse getUserByIdPassword(String username, String password);
+	//change password 
+    public ResultResponse changePassword(Users user);
+	
 }

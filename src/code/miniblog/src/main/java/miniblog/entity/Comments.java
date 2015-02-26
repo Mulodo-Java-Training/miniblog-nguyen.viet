@@ -2,50 +2,27 @@ package miniblog.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import miniblog.api.CommonAPI;
+import miniblog.constant.CommonConstant;
 import miniblog.util.DateAdapter;
+import miniblog.util.ResultResponse;
 
-@Entity
-@Table(name = "Comments")
+import org.jboss.resteasy.client.ClientResponse;
+
+@SuppressWarnings("deprecation")
 public class Comments {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue
-    @XmlAttribute(name = "id")
     private int id;
-
-    @Column(name = "users_id")
-    @XmlElement(name = "users_id")
     private int users_id;
-
-    @Column(name = "articles_id")
-    @XmlElement(name = "articles_id")
     private int articles_id;
-
-    @Column(name = "description")
-    @XmlElement(name = "description")
+    private Users users;
+    private Articles articles;
     private String description;
-
-    @Column(name = "status")
-    @XmlElement(name = "status")
     private int status;
-
-    @Column(name = "date_create")
     @XmlJavaTypeAdapter(DateAdapter.class)
-    @XmlElement(name = "date_create")
     private Date date_create;
-
-    @Column(name = "date_modify")
-    @XmlElement(name = "date_modify")
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date date_modify;
 
@@ -87,6 +64,44 @@ public class Comments {
     public void setDate_create(Date date_create)
     {
         this.date_create = date_create;
+    }
+    
+    public Users getUsers()
+    {
+        // Create API operation
+        CommonAPI api = new CommonAPI();
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.USER_INFOR_URL + getUsers_id(),
+                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, null, CommonConstant.METHOD_GET);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        this.users = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
+        return this.users;
+    }
+
+    public void setUsers(Users users)
+    {
+        this.users = users;
+    }
+
+    public Articles getArticles()
+    {
+         // Create API operation
+        CommonAPI api = new CommonAPI();
+        // operate via API
+        ClientResponse<ResultResponse> response = api.processing(CommonConstant.POST_BY_ID_URL + getArticles_id(),
+                MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, null, CommonConstant.METHOD_GET);
+        // Create object and get value return
+        ResultResponse apiReturn = new ResultResponse();
+        apiReturn = api.parseMeta(response);
+        this.articles = (Articles) api.parseData(apiReturn, CommonConstant.TYPE_POST);
+        return this.articles;
+    }
+
+    public void setArticles(Articles articles)
+    {
+        this.articles = articles;
     }
 
     public String getDescription()

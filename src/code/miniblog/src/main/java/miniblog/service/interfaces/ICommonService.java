@@ -1,16 +1,16 @@
 package miniblog.service.interfaces;
 
-import java.util.List;
+import miniblog.util.ResultResponse;
 
 public interface ICommonService<T> {
     //list object
-	List<T> list();
-	//get object by id
-	T getById(int id);
-	//add a object
-	boolean add(T obj);
-	//delete object
-	boolean delete(int id);
-	//update object
-	boolean update(T obj);
+    ResultResponse list();
+    //get object by id
+    ResultResponse getById(int id);
+    //add a object
+    ResultResponse add(T obj);
+    //delete object
+    ResultResponse delete(int id);
+    //update object
+    ResultResponse update(T obj);
 }
