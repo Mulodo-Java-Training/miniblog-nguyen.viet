@@ -324,15 +324,37 @@ public class UserController {
         model.addAttribute("user", userService.getById(u.getId()));
         return "changepass";
     }
-    
+
     // Search user by name
     @RequestMapping(value = "/searchUser")
     public String searchByName(HttpServletRequest request, ModelMap model)
     {
-        String nameSearch = request.getParameter("nameSearch");
+        // create session to check
+        HttpSession session = request.getSession(true);
+        // create messager to return
+        ResultResponse result = new ResultResponse();
+        // check user login or not
+        if (session.getAttribute("user_id") == null)
+        {
+            return "welcome";
+        }
+        // get input from user
+        String nameInput = request.getParameter("nameSearch");
+        // cut off space in string
+        String nameSearch = nameInput.trim();
+        // check if user input only space or empty field
+        if (nameSearch.isEmpty() || !nameSearch.matches(".*\\w.*"))
+        {
+            return "home";
+        }
         // get user have the same name with client input
         List<Users> users = userService.getUsersByName(nameSearch);
         // check have or not user in database match name searching
+        if (users.isEmpty())
+        {
+            result = new ResultResponse("Not have any exist!", null, CommonConstant.MESS_SUCCESS);
+        }
+        model.addAttribute("messager", result.toString());
         // get new infor of user
         model.addAttribute("userList", users);
         return "home";
