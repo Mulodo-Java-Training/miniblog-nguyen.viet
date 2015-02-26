@@ -26,10 +26,6 @@ public class Articles {
     private Date date_modify;
 
     public Articles() {
-
-        Date date = new Date();
-        // set date_create a post
-        this.date_create = date;
     }
 
     public int getId()

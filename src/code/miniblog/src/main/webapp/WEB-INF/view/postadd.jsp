@@ -61,20 +61,7 @@
 			</div>
 			<!--end col 2 -->
 			<!--col 3-->
-			<div class="col-md-3 col-sm-offset-8 blog-sidebar affix">
-				<ul class="nav nav-list bs-docs-sidenav fix-size">
-					<li><a href="post.add" class="font-nav-sile">New Post <span
-							class="pull-right glyphicon glyphicon-plus"></span>
-					</a></li>
-					<li><a href="post.user?id=<%=user_id%>" class="font-nav-sile">My
-							Post <span class="pull-right glyphicon glyphicon-th-list"></span>
-					</a></li>
-					<li><a href="#" class="font-nav-sile">Top Post <span
-							class="pull-right glyphicon glyphicon-list-alt"></span></a></li>
-					<li><a href="post.list" class="font-nav-sile">All Post <span
-							class="pull-right glyphicon glyphicon-th"></span></a></li>
-				</ul>
-			</div>
+			<%@include file="leftbar.jsp"%>
 			<!--end col 3 -->
 		</div>
 		<!-- /.col -->
