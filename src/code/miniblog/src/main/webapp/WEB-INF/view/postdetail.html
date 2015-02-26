@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap theme -->
+<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="css/theme.css" rel="stylesheet">
+<link href="css/editor.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/dobPicker.min.js"></script>
+<script src="js/editor.js"></script>
+<script type="text/javascript">
+	function myFunction(){
+		$("#myModal").modal('show');
+	};
+</script>
+<title>Post Detail</title>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header"> <a class="miniblog-icon" href="home.html">Mini Blog</a> </div>
+    <div class="row">
+      <div class="col-sm-5 col-sm-offset-1">
+        <div id="imaginary_container">
+          <form >
+            <div class="input-group stylish-input-group">
+              <input type="text" class="form-control"  placeholder="Username, Lastname, Firstname" >
+              <span class="input-group-addon">
+              <button type="submit"> <span class="glyphicon glyphicon-search"></span> </button>
+              </span> </div>
+          </form>
+        </div>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown"> <a href="" class="dropdown-toggle animate" data-toggle="dropdown">Hi Nguyen Viet<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="useredit.html" class="animate">Profile<span class="pull-right glyphicon glyphicon-user"></span></a></li>
+            <li><a href="welcome.html" class="animate">Logout<span class="pull-right glyphicon glyphicon-off"></span></a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  </div>
+</nav>
+<!--End header--> 
+<!-- Container -->
+
+<div class="container">
+  <div class="row">
+    <h3> Post detail </h3>
+    <hr>
+    <!--Sort column to show--> 
+    <!--col 1 is emty-->
+    <div class="col-md-2 blog-main"> </div>
+    <!--end col 1--> 
+    <!--col 2 is show post-->
+    <div class="col-md-6 blog-main ">
+      <div class="blog-post">
+        <div method="POST" action="" accept-charset="UTF-8" role="form" class="form-signin">
+          <fieldset>
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3> Post 1 </h3>
+                <p class="blog-post-meta detail-post">Date: 01/02/2015 11:12:32 by <a href="#">Viet</a></p>
+                <a href="postedit.html" class="glyphicon glyphicon-pencil"></a>&nbsp;&nbsp; <a href="home.html" class="glyphicon glyphicon-trash"></a> </div>
+              <div class="panel-body">
+                <p> Multimedia messaging services were first developed as a captive technology that would enable service providers to "collect a fee every time anyone snaps a photo."[1]
+                  
+                  Early MMS deployments were plagued by technical issues and frequent consumer disappointments, but in recent years MMS deployment by major technology companies have solved many of the early challenges through handset detection, content optimization, increased throughput, etc.
+                  
+                  China was one of the early markets to make MMS a major commercial success partly as the penetration rate of personal computers was modest but MMS-capable cameraphones spread rapidly. The chairman and CEO of China Mobile said at the GSM Association Mobile Asia Congress in 2009 that MMS in China is now a mature service on par with SMS text messaging.
+                  
+                  Europe's most advanced MMS market has been Norway and in 2008 the Norwegian MMS usage level had passed 84% of all mobile phone subscribers. Norwegian mobile subscribers average one MMS sent per week.
+                  
+                  Between 2010 and 2013, MMS traffic in the U.S. increased by 70% from 57 Billion to 96 Billion messages sent. [2] One of the main reason behind increase in MMS traffic is decrease of usage of proprietary Mobile Operating Systems, as they had different implementations for enconding and MMS message handling. As most of the smartphones are running Android, MMS encoding and implementation gets generalized hence usage of MMS has been increased substantially </p>
+              </div>
+            </div>
+            <h4> Comments </h4>
+            <hr>
+            <div class="panel panel-primary">
+              <div class="panel-body">
+                <p> Multimedia messaging services were first developed as a captive technology that would enable service providers to "collect a fee every time anyone snaps a photo."[1] </p>
+                <p class="blog-post-meta detail-post">Date: 01/02/2015 12:12:32 by <a href="#">Mark</a></p>
+              </div>
+            </div>
+            <div class="panel panel-primary">
+              <div class="panel-body">
+                <p> Multimedia messaging services providers to "collect a fee every time anyone snaps a photo." </p>
+                <p class="blog-post-meta detail-post">Date: 01/02/2015 12:12:32 by <a href="#">Viet Nguyen</a></p>
+                <a class="glyphicon glyphicon-pencil" onclick="myFunction()"></a>&nbsp;&nbsp; <a href="postdetail.html" class="glyphicon glyphicon-trash"></a>
+              </div>
+            </div>
+            <form >
+              <textarea class="panel-body" rows="auto" cols="50" placeholder="Leave your comment....!"></textarea>
+              <input class="btn btn-primary " type="submit" value="Add" name="add" style="float:right"/>
+            </form>
+          </fieldset>
+        </div>
+      </div>
+      <br>
+    </div>
+    <!--end col 2 --> 
+    <!--col 3-->
+    <div class="col-md-3 col-sm-offset-8 blog-sidebar affix">
+      <ul class="nav nav-list bs-docs-sidenav fix-size">
+        <li><a href="postadd.html" class="font-nav-sile">New Post <span class="pull-right glyphicon glyphicon-plus"></span></a></li>
+        <li><a href="#" class="font-nav-sile">My Post <span class="pull-right glyphicon glyphicon-th-list"></a></li>
+        <li><a href="#" class="font-nav-sile">Top Post <span class="pull-right glyphicon glyphicon-list-alt"></a></li>
+        <li><a href="#" class="font-nav-sile">All Post <span class="pull-right glyphicon glyphicon-th"></a></li>
+      </ul>
+    </div>
+    <!--end col 3 --> 
+  </div>
+  <!-- /.col --> 
+</div>
+<!-- /container -->
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Edit Comment</h4>
+            </div>
+            <div class="modal-body">
+                 <textarea class="panel-body" placeholder="Leave your comment....!">Multimedia messaging services providers to "collect a fee every time anyone snaps a photo.</textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
