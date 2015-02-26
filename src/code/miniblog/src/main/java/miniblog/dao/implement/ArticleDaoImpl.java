@@ -4,9 +4,11 @@ import java.util.List;
 
 import miniblog.dao.interfaces.IArticleDao;
 import miniblog.entity.Articles;
+import miniblog.entity.Users;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -36,12 +38,14 @@ public class ArticleDaoImpl<T extends Articles> extends CommonDaoImpl<Articles> 
     @Override
     public List<Articles> getArticlesByUser(int userID)
     {
+        Users u = new Users();
+        u.setId(userID);
         // create session
         Session s = sessionFactory.getCurrentSession();
         // begin transaction
         s.beginTransaction();
         // set user list when data return
-        List<Articles> list = s.createCriteria(Articles.class).add(Restrictions.eq("users_id", userID)).list();
+        List<Articles> list = s.createCriteria(Articles.class).add(Restrictions.eq("users_id", u)).addOrder(Order.desc("id")).list();
         return list;
     }
 }

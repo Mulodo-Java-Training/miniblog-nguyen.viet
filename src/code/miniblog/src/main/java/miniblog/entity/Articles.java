@@ -1,11 +1,14 @@
 package miniblog.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -13,15 +16,16 @@ import miniblog.util.DateAdapter;
 
 @Entity
 @Table(name = "Articles")
-public class Articles {
-
+public class Articles implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "id")
     @GeneratedValue
     private int id;
 
-    @Column(name = "users_id")
-    private int users_id;
+    @ManyToOne
+    @JoinColumn(name="users_id", referencedColumnName="id", insertable = true, updatable = true)
+    private Users users_id;
 
     @Column(name = "title")
     private String title;
@@ -56,12 +60,12 @@ public class Articles {
         this.id = id;
     }
 
-    public int getUsers_id()
+    public Users getUsers_id()
     {
         return users_id;
     }
 
-    public void setUsers_id(int users_id)
+    public void setUsers_id(Users users_id)
     {
         this.users_id = users_id;
     }
