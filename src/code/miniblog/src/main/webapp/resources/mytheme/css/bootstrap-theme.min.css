@@ -426,7 +426,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe8e8e8', end
 }
 
 .miniblog-icon{
-    font-size: 200%;
+    font-size: 150%;
     color: #F5EEEE;
     font-family: Segoe UI Black;
 }
@@ -439,11 +439,14 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe8e8e8', end
    border-left: thin solid ; /* or height in PX */
 } 
 .fix-size{
-	width:150px;
+	margin-top: 5%;
+	width: 130px;
+	zoom: 80%;
 }
 .font-nav-sile{
 	font-weight: bolder;
-	font-size:16px;
+	font-size:100%;
+	margin-bottom: -5px;
 }
 
 .detail-post{
@@ -463,4 +466,14 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe8e8e8', end
     overflow:hidden;              /* don't show excess chars */
     white-space:nowrap;           /* force single line */
     width: 100%;                 /* fixed width */
+}
+.search-box-header{
+	text-align: center;
+	border-color: transparent;
+}
+.menu-header{
+	margin-right: 5%;
+}
+.search-box-size{
+	width: 100%;
 }

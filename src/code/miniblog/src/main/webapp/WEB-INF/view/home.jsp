@@ -23,13 +23,12 @@
 	<!-- Container -->
 	<div class="container">
 		<div class="row">
-			<hr>
 			<!--Sort column to show-->
 			<!--col 1 is emty-->
-			<div class="col-md-2 blog-main"></div>
+			<div class="col-lg-3 col-md-3 col-sm-0 col-xs-0"></div>
 			<!--end col 1-->
 			<!--col 2 is show post-->
-			<div class="col-md-6 blog-main ">
+			<div class="col-lg-6 col-md-6 col-sm-9 col-xs-9" >
 				${messager}
 				<c:forEach var="u" items="${userList}">
 					<c:set var="birthday" value="${u.birthday}" />
@@ -59,17 +58,21 @@
 				<br>
 				<!-- /.blog-post -->
 				<c:forEach var="p" items="${postList}">
-					<div class="blog-post">
-						<h4 class="blog-post-title">
-							<a href="post.detail?id=${p.id}">${p.title}</a>
-						</h4>
-						<p class="blog-post-meta detail-post">
-							<fmt:timeZone value="GMT-0">
-							Date create: <fmt:formatDate pattern="yyyy/MM/dd HH:mm:ss" value="${p.date_create}"/> 
-							by <a href="post.user?id=${p.users.id}">${p.users.username}</a>
-							</fmt:timeZone>
-						</p>
-						<p class="box-description">${p.description}</p>
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h5 class="blog-post-title" align="justify">
+								<a href="post.detail?id=${p.id}">${p.title}</a>
+							</h5>
+							<p class="blog-post-meta detail-post">
+								<fmt:timeZone value="GMT-0">
+								Date create: <fmt:formatDate pattern="yyyy/MM/dd HH:mm:ss" value="${p.date_create}"/> 
+								by <a href="post.user?id=${p.users.id}">${p.users.username}</a>
+								</fmt:timeZone>
+							</p>
+						</div>
+						<div class="panel-body">
+							<p class="box-description">${p.description}</p>
+						</div>
 					</div>
 					<br>
 				</c:forEach>

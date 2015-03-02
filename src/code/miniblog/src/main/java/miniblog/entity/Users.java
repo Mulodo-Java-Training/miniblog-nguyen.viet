@@ -6,7 +6,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import miniblog.util.DateAdapter;
 
-public class Users {
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("session")
+public class Users{
     private int id;
     private String username;
 
@@ -116,4 +121,5 @@ public class Users {
     {
         this.status = status;
     }
+
 }
