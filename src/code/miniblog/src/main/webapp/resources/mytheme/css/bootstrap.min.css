@@ -3811,7 +3811,7 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 	border-color: #080808
 }
 .navbar-inverse .navbar-brand {
-	color: #9d9d9d
+	color: #FDFCFC;
 }
 .navbar-inverse .navbar-brand:focus, .navbar-inverse .navbar-brand:hover {
 	color: #fff;
@@ -5418,7 +5418,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', end
 	visibility: hidden!important
 }
 .affix {
-	position: fixed
+	position: fixed;
 }
 @-ms-viewport {
 width:device-width

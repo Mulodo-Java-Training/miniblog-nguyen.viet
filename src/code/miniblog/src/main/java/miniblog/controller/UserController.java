@@ -14,11 +14,16 @@ import miniblog.entity.Articles;
 import miniblog.entity.Users;
 import miniblog.service.interfaces.IArticleService;
 import miniblog.service.interfaces.IUserService;
+import miniblog.util.CustomAuthenticationProvider;
 import miniblog.util.ResultResponse;
 import miniblog.util.ResultReturn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,10 +44,11 @@ public class UserController {
     private IArticleService articleService;
 
     // Create API operation
-    CommonAPI api;
+    private CommonAPI api;
 
-    // Messager
-    String messager;
+    // Create Spring Securrity
+    @Autowired
+    private CustomAuthenticationProvider authenticationManager;
 
     public UserController() {
         this.api = new CommonAPI();
@@ -109,7 +115,7 @@ public class UserController {
 
     // access Login page
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login()
+    public String login(ModelMap modelMap, HttpServletRequest request)
     {
         return "login";
     }
@@ -132,6 +138,15 @@ public class UserController {
             session.setAttribute("user_id", user.getId());
             session.setAttribute("username", user.getUsername());
             session.setAttribute("fullname", user.getLastname() + " " + user.getFirstname());
+
+            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username,
+                    password);
+
+            // Authenticate the user
+            Authentication authentication = authenticationManager.authenticate(authRequest);
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+            securityContext.setAuthentication(authentication);
+
             // return if login success!
             // create a list to hold data return
             apiReturn = articleService.list();
@@ -166,25 +181,19 @@ public class UserController {
     {
         // create session to get current user login
         HttpSession session = request.getSession();
-        // check user login or not
-        if (session.getAttribute("user_id") != null)
+        // check user infor match with current user login
+        if (session.getAttribute("user_id").equals(id))
         {
-            // check user infor match with current user login
-            if (session.getAttribute("user_id").equals(id))
-            {
-                ResultResponse apiReturn = userService.getById(id);
-                Users user = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
-                // get user infor
-                model.addAttribute("user", user);
-                return "useredit";
-            } else
-            {
-                // return home if no match
-                return "home";
-            }
+            ResultResponse apiReturn = userService.getById(id);
+            Users user = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
+            // get user infor
+            model.addAttribute("user", user);
+            return "useredit";
         } else
-            // return if user not login
-            return "login";
+        {
+            // return home if no match
+            return "home";
+        }
     }
 
     // update user
@@ -250,25 +259,19 @@ public class UserController {
     {
         // create session to get current user login
         HttpSession session = request.getSession();
-        // check user login or not
-        if (session.getAttribute("user_id") != null)
+        // check user infor match with current user login
+        if (session.getAttribute("user_id").equals(id))
         {
-            // check user infor match with current user login
-            if (session.getAttribute("user_id").equals(id))
-            {
-                // get infor user default
-                ResultResponse apiReturn = userService.getById(id);
-                Users userDefault = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
-                model.addAttribute("user", userDefault);
-                return "changepass";
-            } else
-            {
-                // return home if no match
-                return "home";
-            }
+            // get infor user default
+            ResultResponse apiReturn = userService.getById(id);
+            Users userDefault = (Users) api.parseData(apiReturn, CommonConstant.TYPE_USER);
+            model.addAttribute("user", userDefault);
+            return "changepass";
         } else
-            // return if user not login
-            return "login";
+        {
+            // return home if no match
+            return "home";
+        }
     }
 
     // change user password
@@ -309,7 +312,6 @@ public class UserController {
         }
         // set new pass for user
         user.setPassword(newPassword);
-        System.out.println(user.getPassword());
         // update new password
         ResultResponse apiChangepass = userService.changePassword(user);
         // return result
@@ -325,17 +327,8 @@ public class UserController {
     @RequestMapping(value = "/searchUser")
     public String searchByName(HttpServletRequest request, ModelMap model)
     {
-        // create session to check
-        HttpSession session = request.getSession(true);
         // create messager to return
         ResultReturn result = new ResultReturn();
-        // check user login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         // get input from user
         String nameInput = request.getParameter("nameSearch");
         // cut off space in string

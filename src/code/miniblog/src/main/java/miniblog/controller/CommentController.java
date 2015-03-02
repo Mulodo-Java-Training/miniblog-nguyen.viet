@@ -57,13 +57,6 @@ public class CommentController {
         HttpSession session = request.getSession(true);
         // create messager to return
         ResultReturn result = new ResultReturn();
-        // check user login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         if (comment.getDescription() == null || !comment.getDescription().matches(".*\\w.*")
                 || comment.getDescription().isEmpty())
         {
@@ -102,13 +95,6 @@ public class CommentController {
         // Get current post
         ResultResponse apiReturn = commentService.getById(comment.getId());
         Comments currentComment = (Comments) api.parseData(apiReturn, CommonConstant.TYPE_COMMENT);
-        // check login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first!", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         // if comment not exist
         if (currentComment == null)
         {
@@ -172,13 +158,6 @@ public class CommentController {
         // get current infor of post
         ResultResponse apiReturn = commentService.getById(id);
         cmt = (Comments) api.parseData(apiReturn, CommonConstant.TYPE_COMMENT);
-        // check login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first!", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
 
         // check comment exist or not
         if (cmt == null)

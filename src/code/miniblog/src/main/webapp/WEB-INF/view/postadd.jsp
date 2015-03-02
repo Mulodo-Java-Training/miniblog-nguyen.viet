@@ -26,7 +26,7 @@
 	</script>
 	<div class="container">
 		<div class="row">
-			<h3>New Post</h3>
+			<h4>New Post</h4>
 			<hr>
 			<!--Sort column to show-->
 			<!--col 1 is emty-->

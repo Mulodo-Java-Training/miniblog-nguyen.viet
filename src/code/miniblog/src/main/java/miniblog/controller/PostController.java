@@ -58,17 +58,6 @@ public class PostController {
     @RequestMapping(value = "/post.list")
     public String getAllPosts(HttpServletRequest request, ModelMap model)
     {
-        // create session to check
-        HttpSession session = request.getSession(true);
-        // create messager to return
-        ResultReturn result = new ResultReturn();
-        // check user login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         // get return from api
         ResultResponse apiReturn = articleService.list();
         // parse data to add list
@@ -84,19 +73,10 @@ public class PostController {
     @RequestMapping(value = "/post.user")
     public String getAllPostsByUser(HttpServletRequest request, ModelMap model)
     {
-        // create session to check
-        HttpSession session = request.getSession(true);
         // create messager to return
         ResultReturn result = new ResultReturn();
         // get user id
         String user_id = request.getParameter("id");
-        // check user login or not and match with current user login
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
 
         // create a list to hold data return
         List<Articles> list = new ArrayList<Articles>();
@@ -135,13 +115,6 @@ public class PostController {
         HttpSession session = request.getSession(true);
         // create messager to return
         ResultReturn result = new ResultReturn();
-        // check user login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         // create a post
         articles.setUsers_id(Integer.valueOf(session.getAttribute("user_id").toString()));
         ResultResponse apiReturn = articleService.add(articles);
@@ -166,17 +139,6 @@ public class PostController {
     public String postDetail(@RequestParam(value = "id", required = false) int id, ModelMap model,
             HttpServletRequest request)
     {
-        // create session to check
-        HttpSession session = request.getSession(true);
-        // create messager to return
-        ResultReturn result = new ResultReturn();
-        // check user login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         //return post infor
         ResultResponse apiReturn = articleService.getById(id);
         Articles post = (Articles) api.parseData(apiReturn, CommonConstant.TYPE_POST);
@@ -198,14 +160,6 @@ public class PostController {
     {
         // create session to check
         HttpSession session = request.getSession(true);
-        // create messager to return
-        ResultReturn result = new ResultReturn();
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first!", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         ResultResponse apiReturn = articleService.getById(id);
         Articles post = (Articles) api.parseData(apiReturn, CommonConstant.TYPE_POST);
         // Permission access
@@ -236,13 +190,6 @@ public class PostController {
         // Get current post
         ResultResponse apiReturn = articleService.getById(article.getId());
         Articles currentPost = (Articles) api.parseData(apiReturn, CommonConstant.TYPE_POST);
-        // check login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first!", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         // if post not exist
         if (currentPost == null)
         {
@@ -298,13 +245,6 @@ public class PostController {
         // get current infor of post
         ResultResponse apiReturn = articleService.getById(id);
         post = (Articles) api.parseData(apiReturn, CommonConstant.TYPE_POST);
-        // check login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first!", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         
         // check user update and user post match
         if (post != null)
@@ -342,17 +282,6 @@ public class PostController {
     @RequestMapping(value = "/post.top", method = RequestMethod.GET)
     public String getTopPosts( ModelMap model,HttpServletRequest request)
     {
-     // create session to check
-        HttpSession session = request.getSession(true);
-        // create messager to return
-        ResultReturn result = new ResultReturn();
-        // check user login or not
-        if (session.getAttribute("user_id") == null)
-        {
-            result = new ResultReturn("You need login first", null, CommonConstant.MESS_FAILD);
-            model.addAttribute("messager", result.toString());
-            return "welcome";
-        }
         // get return from api
         ResultResponse apiReturn = articleService.list();
         // parse data to add list

@@ -17,7 +17,11 @@
 
 		if (userID == 0)
 	%>
-	<div class="col-md-3 col-sm-offset-8 blog-sidebar affix">
+	<div class="col-lg-3 col-lg-offset-8 
+				col-md-3 col-md-offset-9 
+				col-sm-3 col-sm-offset-8 
+				col-xs-4 col-xs-offset-8 
+				affix">
 		<ul class="nav nav-list bs-docs-sidenav fix-size">
 			<li><a href="post.add" class="font-nav-sile">New Post <span
 					class="pull-right glyphicon glyphicon-plus"></span>

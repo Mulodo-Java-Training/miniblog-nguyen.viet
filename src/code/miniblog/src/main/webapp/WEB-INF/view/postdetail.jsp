@@ -29,7 +29,7 @@
 
 	<div class="container">
 		<div class="row">
-			<h3>Post detail</h3>
+			<h4>Post detail</h4>
 			<hr>
 			<!--Sort column to show-->
 			<!--col 1 is emty-->

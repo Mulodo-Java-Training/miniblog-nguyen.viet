@@ -23,7 +23,10 @@
     ${messager}
       <h3 style="color:dimgray; text-align: center">Login</h3>
       <hr class="">
-      <form method="POST" action="login" accept-charset="UTF-8" role="form" class="form-signin">
+      <%-- <form method="POST" action="login" accept-charset="UTF-8" role="form" class="form-signin"> --%>
+      <form name="f"
+		action="login"
+		method="POST" accept-charset="UTF-8" role="form" class="form-signin">
         <fieldset>
           <input class="form-control" placeholder="Username" name="username" type="text">
           <input class="form-control middle" placeholder="Password" name="password" type="password" value="">
