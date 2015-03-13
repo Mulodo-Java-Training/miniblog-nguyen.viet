@@ -2,7 +2,7 @@ package miniblog.test.dao;
 
 import java.util.List;
 
-import miniblog.dao.interfaces.IUserDao;
+import miniblog.dao.IUserDao;
 import miniblog.entity.Users;
 
 import org.junit.After;

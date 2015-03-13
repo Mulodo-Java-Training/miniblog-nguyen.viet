@@ -2,22 +2,23 @@ package miniblog.service.implement;
 
 import java.util.List;
 
-import miniblog.dao.interfaces.IUserDao;
+import miniblog.dao.ICommonDao;
+import miniblog.dao.IUserDao;
 import miniblog.entity.Users;
-import miniblog.service.interfaces.IUserService;
+import miniblog.service.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service("UserServiceImpl")
-public class UserServiceImpl<T extends Users> implements IUserService {
+public class UserServiceImpl<T extends Users> extends CommonServiceImpl<Users> implements IUserService  {
 
     // Create userDAO to operation with database
     @Autowired
     @Qualifier("UserDaoImpl")
     private IUserDao<Users> userDAO;
-
+    
     public void setUserDAO(IUserDao<Users> user)
     {
         this.userDAO = user;
@@ -45,33 +46,11 @@ public class UserServiceImpl<T extends Users> implements IUserService {
     }
 
     @Override
-    public List<Users> list()
+    protected ICommonDao<Users> getDao()
     {
-        return this.userDAO.list();
+        // TODO Auto-generated method stub
+        return userDAO;
     }
 
-    @Override
-    public Users getById(int id)
-    {
-        return this.userDAO.get(id);
-    }
-
-    @Override
-    public boolean add(Users user)
-    {
-        return this.userDAO.save(user);
-    }
-
-    @Override
-    public boolean delete(int id)
-    {
-        return this.userDAO.delete(id);
-    }
-
-    @Override
-    public boolean update(Users user)
-    {
-        return this.userDAO.update(user);
-    }
 
 }

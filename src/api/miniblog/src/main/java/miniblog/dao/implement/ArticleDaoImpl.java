@@ -2,7 +2,7 @@ package miniblog.dao.implement;
 
 import java.util.List;
 
-import miniblog.dao.interfaces.IArticleDao;
+import miniblog.dao.IArticleDao;
 import miniblog.entity.Articles;
 
 import org.hibernate.Session;

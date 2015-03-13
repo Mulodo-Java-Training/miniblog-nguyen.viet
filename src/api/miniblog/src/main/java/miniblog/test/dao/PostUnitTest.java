@@ -1,7 +1,7 @@
 package miniblog.test.dao;
 
-import miniblog.dao.interfaces.IArticleDao;
-import miniblog.dao.interfaces.IUserDao;
+import miniblog.dao.IArticleDao;
+import miniblog.dao.IUserDao;
 import miniblog.entity.Articles;
 import miniblog.entity.Users;
 
