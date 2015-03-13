@@ -2,16 +2,17 @@ package miniblog.service.implement;
 
 import java.util.List;
 
-import miniblog.dao.interfaces.IArticleDao;
+import miniblog.dao.IArticleDao;
+import miniblog.dao.ICommonDao;
 import miniblog.entity.Articles;
-import miniblog.service.interfaces.IArticleService;
+import miniblog.service.IArticleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service("ArticleServiceImpl")
-public class ArticleServiceImpl<T extends Articles> implements IArticleService {
+public class ArticleServiceImpl<T extends Articles> extends CommonServiceImpl<Articles> implements IArticleService {
 
     // Create articleDAO to operation with database
     @Autowired
@@ -32,40 +33,15 @@ public class ArticleServiceImpl<T extends Articles> implements IArticleService {
     }
 
     @Override
-    public List<Articles> list()
-    {
-        System.out.println(this.articleDAO.list().toString());
-        return this.articleDAO.list();
-    }
-
-    @Override
-    public Articles getById(int id)
-    {
-        return this.articleDAO.get(id);
-    }
-
-    @Override
-    public boolean add(Articles obj)
-    {
-        return this.articleDAO.save(obj);
-    }
-
-    @Override
-    public boolean delete(int id)
-    {
-        return this.articleDAO.delete(id);
-    }
-
-    @Override
-    public boolean update(Articles obj)
-    {
-        return this.articleDAO.update(obj);
-    }
-
-    @Override
     public List<Articles> getAllPostByUser(int userID)
     {
         return this.articleDAO.getArticlesByUser(userID);
+    }
+
+    @Override
+    protected ICommonDao<Articles> getDao()
+    {
+        return articleDAO;
     }
 
 }

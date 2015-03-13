@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import miniblog.entity.Users;
-import miniblog.service.interfaces.IUserService;
+import miniblog.service.IUserService;
 import miniblog.util.Commons;
 import miniblog.util.ResultResponse;
 import miniblog.util.StatusResponse;
@@ -157,7 +157,13 @@ public class UserController {
         Users user = userService.getById(id);
         if (user == null)
         {
-            user = new Users();
+            // set status return
+            StatusResponse status = new StatusResponse(200, "User not exist.", "Get data faild!");
+            // set result return
+            ResultResponse result = new ResultResponse(status, null);
+            // return result
+            return Response.status(9001).entity(result).build();
+            
         }
         // set status return
         StatusResponse status = new StatusResponse(200, "Get user information successfully.", "Get data success!");

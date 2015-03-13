@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import miniblog.entity.Articles;
-import miniblog.service.interfaces.IArticleService;
+import miniblog.service.IArticleService;
 import miniblog.util.ResultResponse;
 import miniblog.util.StatusResponse;
 

@@ -2,7 +2,7 @@ package miniblog.dao.implement;
 
 import java.util.List;
 
-import miniblog.dao.interfaces.ICommentDao;
+import miniblog.dao.ICommentDao;
 import miniblog.entity.Comments;
 
 import org.hibernate.Session;
